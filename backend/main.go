@@ -4,9 +4,12 @@ import (
 	"log"
 	"os"
 
+	"github.com/Vishal21121/ShowCaseIt/controllers"
 	"github.com/Vishal21121/ShowCaseIt/storage"
 	"github.com/Vishal21121/ShowCaseIt/types"
 	"github.com/Vishal21121/ShowCaseIt/utils"
+	"github.com/Vishal21121/ShowCaseIt/validators"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -31,15 +34,21 @@ func main() {
 	}))
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = utils.CustomErrorHandler
+	validate := validator.New()
+	validate.RegisterValidation("domain", validators.CustomDomainValidator)
+	e.Validator = &validators.CustomValidator{Validator: validate}
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(200, types.ApiResponse{
-			StatusCode: 200,
-			Data:       nil,
-			Message:    "Health is Ok",
-			Success:    true,
+			Data:    nil,
+			Message: "Health is Ok",
+			Success: true,
 		})
 	})
+
+	projectHandler := controllers.NewProject(storage.DB.Database("showcaseIt").Collection("projects"))
+	projectRouter := e.Group("/api/v1/project")
+	projectRouter.POST("/create", projectHandler.CreateProject)
 
 	log.Fatal(e.Start(":8080"))
 }
