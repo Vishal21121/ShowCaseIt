@@ -6,6 +6,7 @@ import (
 
 	"github.com/Vishal21121/ShowCaseIt/storage"
 	"github.com/Vishal21121/ShowCaseIt/types"
+	"github.com/Vishal21121/ShowCaseIt/utils"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -29,6 +30,7 @@ func main() {
 		Format: "time=${time_rfc3339}, method=${method}, uri=${uri}, status=${status}, latency=${latency_human}",
 	}))
 	e.Use(middleware.Recover())
+	e.HTTPErrorHandler = utils.CustomErrorHandler
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(200, types.ApiResponse{
