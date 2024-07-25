@@ -49,6 +49,7 @@ func main() {
 	projectHandler := controllers.NewProject(storage.DB.Database("showcaseIt").Collection("projects"))
 	projectRouter := e.Group("/api/v1/project")
 	projectRouter.POST("/create", projectHandler.CreateProject)
+	projectRouter.GET("/get", projectHandler.GetProjects)
 
 	log.Fatal(e.Start(":8080"))
 }

@@ -26,3 +26,11 @@ func CustomErrorHandler(err error, c echo.Context) {
 		},
 	})
 }
+
+func ThrowError(StatusCode int, Message string, Errors []string) *types.ErrorResponse {
+	return &types.ErrorResponse{
+		StatusCode: StatusCode,
+		Message:    Message,
+		Errors:     Errors,
+	}
+}
