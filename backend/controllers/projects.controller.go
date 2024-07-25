@@ -11,6 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ProjectHandler struct {
@@ -34,7 +35,7 @@ func (pr *ProjectHandler) CreateProject(c echo.Context) error {
 
 	// validate the data
 	if validateError := c.Validate(bodyData); validateError != nil {
-		errorMessages := validators.ProjectCreateValidator(c, validateError)
+		errorMessages := validators.ProjectCreateValidator(validateError)
 		return utils.ThrowError(422, "Validation failed", errorMessages)
 	}
 
@@ -98,4 +99,44 @@ func (pr *ProjectHandler) GetProjects(c echo.Context) error {
 		Success: true,
 	})
 
+}
+
+func (pr *ProjectHandler) UpdateProject(c echo.Context) error {
+
+	var bodyData types.ProjectUpdateBody
+	bindError := c.Bind(&bodyData)
+	if bindError != nil {
+		return utils.ThrowError(400, bindError.Error(), []string{})
+	}
+
+	// validate the data
+	if validateError := c.Validate(bodyData); validateError != nil {
+		errorMessages := validators.ProjectUpdateValidator(validateError)
+		return utils.ThrowError(422, "Validation failed", errorMessages)
+	}
+
+	// updating the document if found and getting the updated data
+	// if not found then will return error
+	result := pr.ProjectCollection.FindOneAndUpdate(c.Request().Context(), bson.M{"_id": bodyData.ID}, bson.M{
+		"$set": bson.M{
+			"title":       bodyData.Title,
+			"description": bodyData.Description,
+			"liveLink":    bodyData.LiveLink,
+			"techStack":   bodyData.TechStack,
+			"demoVideo":   bodyData.DemoVideo,
+		},
+	}, options.FindOneAndUpdate().SetReturnDocument(options.After))
+
+	// if document is not found
+	if result.Err() != nil {
+		return utils.ThrowError(404, "Nothing to update", []string{})
+	}
+
+	var decodedResult bson.M
+	result.Decode(&decodedResult)
+	return c.JSON(200, types.ApiResponse{
+		Success: true,
+		Message: "Project updated successfully",
+		Data:    decodedResult,
+	})
 }

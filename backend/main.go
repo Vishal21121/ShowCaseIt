@@ -50,6 +50,7 @@ func main() {
 	projectRouter := e.Group("/api/v1/project")
 	projectRouter.POST("/create", projectHandler.CreateProject)
 	projectRouter.GET("/get", projectHandler.GetProjects)
+	projectRouter.PATCH("/update", projectHandler.UpdateProject)
 
 	log.Fatal(e.Start(":8080"))
 }
