@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/Vishal21121/ShowCaseIt/validators"
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -117,7 +119,10 @@ func (pr *ProjectHandler) UpdateProject(c echo.Context) error {
 
 	// updating the document if found and getting the updated data
 	// if not found then will return error
-	result := pr.ProjectCollection.FindOneAndUpdate(c.Request().Context(), bson.M{"_id": bodyData.ID}, bson.M{
+
+	objectIdFromString, _ := primitive.ObjectIDFromHex(bodyData.ID)
+
+	result := pr.ProjectCollection.FindOneAndUpdate(c.Request().Context(), bson.M{"_id": objectIdFromString}, bson.M{
 		"$set": bson.M{
 			"title":       bodyData.Title,
 			"description": bodyData.Description,
@@ -138,5 +143,37 @@ func (pr *ProjectHandler) UpdateProject(c echo.Context) error {
 		Success: true,
 		Message: "Project updated successfully",
 		Data:    decodedResult,
+	})
+}
+
+func (pr *ProjectHandler) DeleteProject(c echo.Context) error {
+	var projectId types.ProjectId
+	bindError := c.Bind(&projectId)
+	if bindError != nil {
+		return utils.ThrowError(400, bindError.Error(), []string{})
+	}
+
+	fmt.Printf("%v\n", projectId)
+	// validate the id
+	validationError := validators.Validator.Struct(projectId)
+	if validationError != nil {
+		fmt.Println("binderr")
+		return utils.ThrowError(400, "Please provide valid MongoDB ID", []string{})
+	}
+
+	// id is valid mongodb ObjectId
+	objectIdFromString, _ := primitive.ObjectIDFromHex(projectId.ID)
+	result := pr.ProjectCollection.FindOneAndDelete(c.Request().Context(), bson.M{
+		"_id": objectIdFromString,
+	})
+
+	if result.Err() != nil {
+		return utils.ThrowError(404, "Nothing to delete", []string{})
+	}
+
+	return c.JSON(200, types.ApiResponse{
+		Success: true,
+		Message: "Project deleted successfully",
+		Data:    nil,
 	})
 }

@@ -2,7 +2,6 @@ package types
 
 import (
 	"github.com/Vishal21121/ShowCaseIt/models"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ProjectCreateBody struct {
@@ -17,10 +16,14 @@ type ProjectCreateBody struct {
 }
 
 type ProjectUpdateBody struct {
-	ID          primitive.ObjectID `json:"id" validate:"required"`
-	Title       string             `json:"title" validate:"required"`
-	Description string             `json:"description" validate:"required"`
-	LiveLink    *string            `json:"liveLink" validate:"omitempty,url"`
-	TechStack   []string           `json:"techStack" validate:"required,min=1,dive,required"`
-	DemoVideo   *string            `json:"demoVideo" validate:"omitempty,url"`
+	ID          string   `json:"id" validate:"required,mongodb"`
+	Title       string   `json:"title" validate:"required"`
+	Description string   `json:"description" validate:"required"`
+	LiveLink    *string  `json:"liveLink" validate:"omitempty,url"`
+	TechStack   []string `json:"techStack" validate:"required,min=1,dive,required"`
+	DemoVideo   *string  `json:"demoVideo" validate:"omitempty,url"`
+}
+
+type ProjectId struct {
+	ID string `json:"id"  validate:"required,mongodb"`
 }

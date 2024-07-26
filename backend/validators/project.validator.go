@@ -7,6 +7,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+var Validator *validator.Validate
+
+func NewValidator() {
+	Validator = validator.New()
+	Validator.RegisterValidation("domain", CustomDomainValidator)
+}
+
 func ProjectCreateValidator(validateError any) []string {
 	errorMessages := make([]string, 0)
 
