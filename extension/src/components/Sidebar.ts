@@ -39,8 +39,6 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
         <link rel="stylesheet" href=${cssSrc}>
       </head>
       <body>
-        <h1>Hello from the Sidebar</h1>
-        <button>Hello</button>
         <div id="root"></div>
         <script type="module" src=${jsSrc}></script>
       </body>
