@@ -4,12 +4,12 @@ import { IoIosStats } from "react-icons/io";
 
 function Card(): React.JSX.Element {
   return (
-    <div className="w-[90%] rounded p-2 flex flex-col gap-4">
-      <p>
+    <div className="w-full rounded p-4 flex flex-col gap-4 border cursor-pointer">
+      <p className="truncate">
         Title: Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione,
         hic?
       </p>
-      <p>
+      <p className="truncate">
         Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.
         Esse, fugiat?
       </p>

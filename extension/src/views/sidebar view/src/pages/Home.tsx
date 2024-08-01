@@ -2,7 +2,7 @@ import Card from "../components/Card";
 
 function Home(): React.JSX.Element {
   return (
-    <div className="p-2 flex flex-col items-center">
+    <div className="p-2 flex flex-col items-center w-full">
       <button className="w-[90%] p-2 ring-2 ring-gray-300 text-lg rounded hover:ring-blue-500">
         Create Post
       </button>
