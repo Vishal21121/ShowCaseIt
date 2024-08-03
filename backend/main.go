@@ -52,6 +52,7 @@ func main() {
 	projectRouter.GET("/get", projectHandler.GetProjects)
 	projectRouter.PATCH("/update", projectHandler.UpdateProject)
 	projectRouter.DELETE("/delete", projectHandler.DeleteProject)
+	projectRouter.GET("/filter", projectHandler.GetProjectByFilter)
 
 	log.Fatal(e.Start(":8080"))
 }

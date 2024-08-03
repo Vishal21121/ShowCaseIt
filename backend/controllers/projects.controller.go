@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -175,5 +176,59 @@ func (pr *ProjectHandler) DeleteProject(c echo.Context) error {
 		Success: true,
 		Message: "Project deleted successfully",
 		Data:    nil,
+	})
+}
+
+func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
+	queryObj := c.QueryParams()
+	// let say there are three key value pairs i know the name of two keys then how to get the last one
+	var knownKey1 = "page"
+	var knownKey2 = "limit"
+	page, _ := strconv.Atoi(queryObj.Get(knownKey1))
+	limit, _ := strconv.Atoi(queryObj.Get(knownKey2))
+	var unknownKey, unknownValue string
+	for k, v := range queryObj {
+		if k != knownKey1 && k != knownKey2 {
+			unknownKey = k
+			unknownValue = v[0]
+		}
+	}
+	startIndex := (page - 1) * limit
+	endIndex := page * limit
+	var result = make(map[string]any)
+	result["currentPage"] = page
+
+	projectCount, countError := pr.ProjectCollection.CountDocuments(c.Request().Context(), bson.M{unknownKey: unknownValue})
+	if countError != nil {
+		return utils.ThrowError(500, countError.Error(), []string{})
+	}
+
+	if endIndex < int(projectCount) {
+		result["nextPage"] = page + 1
+	} else {
+		result["nextPage"] = nil
+	}
+
+	findOptions := options.Find().SetLimit(int64(limit)).SetSkip(int64(startIndex))
+	curr, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{unknownKey: unknownValue}, findOptions)
+	if findError != nil {
+		return utils.ThrowError(500, findError.Error(), []string{})
+	}
+	var filteredProjects []bson.M
+	cursorErr := curr.All(c.Request().Context(), &filteredProjects)
+	if cursorErr != nil {
+		return utils.ThrowError(500, cursorErr.Error(), []string{})
+	}
+
+	if len(filteredProjects) == 0 {
+		return utils.ThrowError(404, "Projects not found", []string{})
+	}
+
+	result["data"] = filteredProjects
+
+	return c.JSON(200, types.ApiResponse{
+		Success: true,
+		Message: "Projects found successfully",
+		Data:    result,
 	})
 }
