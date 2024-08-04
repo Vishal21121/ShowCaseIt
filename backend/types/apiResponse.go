@@ -1,7 +1,7 @@
 package types
 
 type ApiResponse struct {
-	Data    any
-	Message string
-	Success bool
+	Data    any    `json:"data"`
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }
