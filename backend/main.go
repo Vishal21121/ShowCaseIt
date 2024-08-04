@@ -53,6 +53,7 @@ func main() {
 	projectRouter.PATCH("/update", projectHandler.UpdateProject)
 	projectRouter.DELETE("/delete", projectHandler.DeleteProject)
 	projectRouter.GET("/filter", projectHandler.GetProjectByFilter)
+	projectRouter.GET("/sort/:sortProp", projectHandler.GetProjectsBySort)
 
 	log.Fatal(e.Start(":8080"))
 }

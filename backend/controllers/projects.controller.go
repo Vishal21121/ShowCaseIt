@@ -255,3 +255,33 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 		Data:    result,
 	})
 }
+
+func (pr *ProjectHandler) GetProjectsBySort(c echo.Context) error {
+	sorter := c.Param("sortProp")
+	if sorter == "" {
+		return utils.ThrowError(400, "Please provide valid sort parameter", []string{})
+	}
+	findOptions := options.Find().SetSort(bson.M{sorter: -1}).SetLimit(3)
+	cursor, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{}, findOptions)
+	if findError != nil {
+		fmt.Println("findError")
+		return utils.ThrowError(500, findError.Error(), []string{})
+	}
+
+	var projects []models.Project
+	cursorError := cursor.All(c.Request().Context(), &projects)
+	if cursorError != nil {
+		return utils.ThrowError(500, cursorError.Error(), []string{})
+	}
+
+	if len(projects) == 0 {
+		return utils.ThrowError(404, "Projects not found", []string{})
+	}
+
+	return c.JSON(200, types.ApiResponse{
+		Data:    projects,
+		Message: "Projects fetched successfully",
+		Success: true,
+	})
+
+}
