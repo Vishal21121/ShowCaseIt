@@ -13,6 +13,13 @@ export function activate(context: vscode.ExtensionContext) {
       mySidebarProvider
     )
   );
+
+  // context.subscriptions.push(
+  //   vscode.commands.registerCommand("showcaseit.refresh", () => {
+  //     // Implement your refresh logic here
+  //     vscode.window.showInformationMessage("Refresh command executed");
+  //   })
+  // );
 }
 
 // This method is called when your extension is deactivated
