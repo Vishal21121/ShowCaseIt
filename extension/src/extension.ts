@@ -25,6 +25,10 @@ export async function activate(context: vscode.ExtensionContext) {
       const userInfo = await octokit.users.getAuthenticated();
       if (userInfo.status === 200) {
         console.log(userInfo.data);
+        mySidebarProvider.webviewViewContainer?.webview.postMessage({
+          command: "loginUser",
+          data: userInfo.data,
+        });
       }
 
       vscode.window.showInformationMessage(

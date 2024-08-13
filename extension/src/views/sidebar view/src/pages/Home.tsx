@@ -1,18 +1,27 @@
 import Card from "../components/Card";
 
-function Home(): React.JSX.Element {
+function ProjectsHomePage(): React.JSX.Element {
   return (
-    <div className="p-2 flex flex-col items-center w-full">
-      <button className="w-[90%] p-2 ring-2 ring-gray-300 text-lg rounded hover:ring-blue-500">
+    <div className="flex flex-col items-center w-full p-2">
+      <button
+        style={{ backgroundColor: "var(--vscode-button-background-color)" }}
+        className="w-[90%] p-2 ring-2 ring-gray-300 text-lg rounded hover:ring-blue-500"
+      >
         Create Post
       </button>
       <div className="divider"></div>
       {/* Post section */}
-      <div className="mt-4 w-full flex flex-col items-center">
+      <h1 className="text-lg">Explore Projects</h1>
+      <div className="mt-4 py-4 w-full h-[78vh] flex flex-col items-center gap-2 overflow-auto">
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
         <Card />
       </div>
     </div>
   );
 }
 
-export default Home;
+export default ProjectsHomePage;

@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 export class MySidebarViewProvider implements vscode.WebviewViewProvider {
   // this is the id we have to write in view.showcaseit
   public static readonly viewType = "showcaseit.sidebarView";
+  public webviewViewContainer: vscode.WebviewView | undefined;
 
   constructor(private readonly _extensionUri: vscode.Uri) {
     this._extensionUri = _extensionUri;
@@ -17,6 +18,14 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
     };
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    this.webviewViewContainer = webviewView;
+
+    webviewView.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "loginUser":
+          vscode.commands.executeCommand("showcaseit.loginUser");
+      }
+    });
   }
 
   private _getHtmlForWebview(webview: vscode.Webview): string {
