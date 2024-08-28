@@ -1,6 +1,9 @@
 import Card from "../components/Card";
+import { useUserContext } from "../context/UserContext";
 
 function ProjectsHomePage(): React.JSX.Element {
+  const userContext = useUserContext();
+  console.log("home page", userContext?.userData);
   return (
     <div className="flex flex-col items-center w-full p-2">
       <button

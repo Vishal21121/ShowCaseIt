@@ -1,12 +1,21 @@
 import * as vscode from "vscode";
 
+function getUserData(context: vscode.ExtensionContext) {
+  return context.globalState.get("userData");
+}
+
 export class MySidebarViewProvider implements vscode.WebviewViewProvider {
   // this is the id we have to write in view.showcaseit
   public static readonly viewType = "showcaseit.sidebarView";
   public webviewViewContainer: vscode.WebviewView | undefined;
+  public vscodeContext: vscode.ExtensionContext;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    private readonly _context: vscode.ExtensionContext
+  ) {
     this._extensionUri = _extensionUri;
+    this.vscodeContext = _context;
   }
 
   public resolveWebviewView(
@@ -24,6 +33,18 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
       switch (message.command) {
         case "loginUser":
           vscode.commands.executeCommand("showcaseit.loginUser");
+          break;
+        case "sendUserData":
+          const userDataFromState = getUserData(this.vscodeContext);
+          console.log(userDataFromState);
+          if (userDataFromState) {
+            console.log("sended");
+            webviewView.webview.postMessage({
+              command: "userData",
+              data: userDataFromState,
+            });
+          }
+          break;
       }
     });
   }

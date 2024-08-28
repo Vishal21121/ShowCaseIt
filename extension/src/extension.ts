@@ -3,11 +3,15 @@
 import vscode from "vscode";
 import { MySidebarViewProvider } from "./components/Sidebar";
 import { Credentials } from "./githubLogin/credentials";
+import { userInfo } from "os";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-  const mySidebarProvider = new MySidebarViewProvider(context.extensionUri);
+  const mySidebarProvider = new MySidebarViewProvider(
+    context.extensionUri,
+    context
+  );
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       MySidebarViewProvider.viewType,
@@ -29,6 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
           command: "loginUser",
           data: userInfo.data,
         });
+        context.globalState.update("userData", userInfo.data);
       }
 
       vscode.window.showInformationMessage(

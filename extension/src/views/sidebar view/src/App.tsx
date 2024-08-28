@@ -19,12 +19,25 @@ function App() {
 
   useEffect(() => {
     renderPage();
+    if (userContext?.userData) {
+      screenContext?.setCurrentScreen("/");
+    } else {
+      (vscode.current as any)?.postMessage({
+        command: "sendUserData",
+      });
+    }
     window.addEventListener("message", (e) => {
       const message = e.data;
       switch (message.command) {
         case "loginUser":
           userContext?.setUserData(message.data);
           screenContext?.setCurrentScreen("/");
+          break;
+        case "userData":
+          console.log(message.data);
+          userContext?.setUserData(message.data);
+          screenContext?.setCurrentScreen("/");
+          break;
       }
     });
   }, []);
