@@ -1,3 +1,5 @@
+import { useScreenContext } from "./context/ScreenContext";
+import { useUserContext } from "./context/UserContext";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { useEffect, useRef } from "react";
@@ -5,26 +7,39 @@ import { useEffect, useRef } from "react";
 declare function acquireVsCodeApi(): any;
 
 function App() {
+  console.log("rendered");
+
+  const userContext = useUserContext();
+  const screenContext = useScreenContext();
+
   const vscode = useRef(null);
   if (vscode.current === null) {
     vscode.current = acquireVsCodeApi();
   }
 
   useEffect(() => {
+    renderPage();
     window.addEventListener("message", (e) => {
       const message = e.data;
       switch (message.command) {
         case "loginUser":
-          console.log(message.data);
+          userContext?.setUserData(message.data);
+          screenContext?.setCurrentScreen("/");
       }
     });
   }, []);
 
-  return (
-    <div>
-      <Login vscode={vscode} />
-    </div>
-  );
+  const renderPage = () => {
+    console.log(screenContext?.currentScreen);
+    switch (screenContext?.currentScreen) {
+      case "/login":
+        return <Login vscode={vscode} />;
+      case "/":
+        return <Home />;
+    }
+  };
+
+  return <div>{renderPage()}</div>;
 }
 
 export default App;
