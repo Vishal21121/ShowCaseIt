@@ -48,7 +48,7 @@ function App() {
       case "/login":
         return <Login vscode={vscode} />;
       case "/":
-        return <Home />;
+        return <Home vscode={vscode} />;
     }
   };
 

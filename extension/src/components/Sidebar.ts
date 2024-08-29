@@ -47,6 +47,8 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
             });
           }
           break;
+        case "loadProjectForm":
+          vscode.commands.executeCommand("showcaseit.projectForm");
       }
     });
   }

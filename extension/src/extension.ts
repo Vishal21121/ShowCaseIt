@@ -3,7 +3,7 @@
 import vscode from "vscode";
 import { MySidebarViewProvider } from "./components/Sidebar";
 import { Credentials } from "./githubLogin/credentials";
-import { userInfo } from "os";
+import { displayProjectForm } from "./components/ProjectForm";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -19,6 +19,19 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  // display webview for creating the project
+  const projectCreateFormCommandHandler = () => {
+    const panel = displayProjectForm(context, "projectCreateForm");
+  };
+  const projectCreateFormCommand = "showcaseit.projectForm";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      projectCreateFormCommand,
+      projectCreateFormCommandHandler
+    )
+  );
+
+  // code for logging in the user
   const credentials = new Credentials();
   await credentials.initialize(context);
 
@@ -41,7 +54,6 @@ export async function activate(context: vscode.ExtensionContext) {
       );
     }
   );
-
   context.subscriptions.push(loginUser);
 }
 

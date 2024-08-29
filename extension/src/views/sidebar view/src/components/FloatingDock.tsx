@@ -1,8 +1,3 @@
-// import { LuHome } from "react-icons/lu";
-// import { CiSearch } from "react-icons/ci";
-// import { FaPlus } from "react-icons/fa";
-// import { FiUser } from "react-icons/fi";
-
 interface IconProps {
   className?: string;
 }
@@ -87,7 +82,13 @@ function UserIcon(props: IconProps) {
   );
 }
 
-function FloatingDock() {
+function FloatingDock({ vscode }: { vscode: any }) {
+  const sendLoadWebview = () => {
+    vscode?.current?.postMessage({
+      command: "loadProjectForm",
+    });
+  };
+
   return (
     <div className="flex items-center justify-around w-full p-2 rounded-full ring ring-primary">
       <div className="tooltip tooltip-bottom" data-tip="Home">
@@ -96,7 +97,11 @@ function FloatingDock() {
       <div className="tooltip tooltip-bottom" data-tip="Search">
         <SearchIcon className="cursor-pointer" />
       </div>
-      <div className="tooltip tooltip-bottom" data-tip="Create">
+      <div
+        className="tooltip tooltip-bottom"
+        data-tip="Create"
+        onClick={sendLoadWebview}
+      >
         <PlusIcon className="cursor-pointer" />
       </div>
       <div className="tooltip tooltip-bottom" data-tip="User">
