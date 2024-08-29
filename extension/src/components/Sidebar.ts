@@ -23,8 +23,10 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
     context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ): Thenable<void> | void {
+    vscode.ViewColumn.One;
     webviewView.webview.options = {
       enableScripts: true,
+      localResourceRoots: [this._extensionUri],
     };
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
     this.webviewViewContainer = webviewView;
