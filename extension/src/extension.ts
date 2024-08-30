@@ -22,6 +22,15 @@ export async function activate(context: vscode.ExtensionContext) {
   // display webview for creating the project
   const projectCreateFormCommandHandler = () => {
     const panel = displayProjectForm(context, "Project Create Form");
+    panel.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "loaded":
+          panel.webview.postMessage({
+            command: "userData",
+            data: context.globalState.get("userData"),
+          });
+      }
+    });
   };
   const projectCreateFormCommand = "showcaseit.projectForm";
   context.subscriptions.push(

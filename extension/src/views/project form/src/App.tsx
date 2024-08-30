@@ -1,8 +1,13 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { userDataType } from "./types/user";
+
+declare function acquireVsCodeApi(): any;
 
 function App() {
+  const [userData, setUserData] = useState<userDataType | null>(null);
   // Custom validation function to check if a string is separated by commas
   const commaSeparatedString = z.string().refine(
     (val) => {
@@ -54,6 +59,7 @@ function App() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -62,6 +68,26 @@ function App() {
   const submitHandler: SubmitHandler<FormFields> = (data) => {
     console.log(data);
   };
+
+  const vscode = useRef(null);
+  if (vscode.current === null) {
+    vscode.current = acquireVsCodeApi();
+  }
+
+  useEffect(() => {
+    (vscode?.current as any).postMessage({
+      command: "loaded",
+    });
+    window.addEventListener("message", (e) => {
+      const message = e.data;
+      switch (message.command) {
+        case "userData":
+          setUserData(message.data);
+          setValue("username", message.data.name);
+          setValue("githubLink", message.data.html_url);
+      }
+    });
+  }, []);
 
   return (
     <div className="flex flex-col justify-center w-full p-4">
