@@ -4,7 +4,7 @@ import { IoIosStats } from "react-icons/io";
 
 function Card(): React.JSX.Element {
   return (
-    <div className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary">
+    <div className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content">
       <div className="flex flex-col w-full gap-2">
         <p className="truncate">
           Title: Lorem ipsum dolor sit amet consectetur adipisicing elit.

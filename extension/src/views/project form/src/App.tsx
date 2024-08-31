@@ -43,6 +43,9 @@ function App() {
     username: z
       .string({ required_error: "Please provide username" })
       .min(3, "Username should be of minimum 3 characters"),
+    avatar: z
+      .string({ required_error: "Avatar Link is required" })
+      .url("Please provide valid url"),
     githubLink: z
       .string({ required_error: "GitHub profile link is required" })
       .url("Please provide valid url"),
@@ -83,20 +86,26 @@ function App() {
       switch (message.command) {
         case "userData":
           setUserData(message.data);
-          setValue("username", message.data.name);
+          setValue("username", message.data.login);
           setValue("githubLink", message.data.html_url);
       }
     });
   }, []);
 
   return (
-    <div className="flex flex-col justify-center w-full p-4">
+    <div className="flex flex-col justify-center w-full max-w-2xl p-6 mx-auto my-6 text-white rounded-lg shadow-lg bg-primary-content">
+      <h1 className="text-2xl font-bold">Project Details</h1>
+      <p className="text-neutral-content">
+        Fill out the form below with your project information.
+      </p>
       <form
         onSubmit={handleSubmit(submitHandler)}
-        className="flex flex-col w-full gap-4"
+        className="flex flex-col w-full gap-4 my-6"
       >
         <div className="flex flex-col w-full gap-1">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title" className="text-lg font-bold">
+            Title
+          </label>
           <input
             id="title"
             type="text"
@@ -111,7 +120,9 @@ function App() {
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description" className="text-lg font-bold">
+            Description
+          </label>
           <textarea
             id="description"
             className="resize-none textarea textarea-bordered textarea-primary"
@@ -126,7 +137,9 @@ function App() {
         </div>
         <div className="flex w-full gap-2">
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="repoLink">Repository Link</label>
+            <label htmlFor="repoLink" className="text-lg font-bold">
+              Repository Link
+            </label>
             <input
               id="repoLink"
               type="url"
@@ -141,7 +154,9 @@ function App() {
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="liveLink">Live Link</label>
+            <label htmlFor="liveLink" className="text-lg font-bold">
+              Live Link
+            </label>
             <input
               id="liveLink"
               type="url"
@@ -159,7 +174,9 @@ function App() {
 
         <div className="flex w-full gap-2">
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="techStack">Tech Stack</label>
+            <label htmlFor="techStack" className="text-lg font-bold">
+              Tech Stack
+            </label>
             <input
               id="techStack"
               type="text"
@@ -174,7 +191,9 @@ function App() {
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="domain">Domain</label>
+            <label htmlFor="domain" className="text-lg font-bold">
+              Domain
+            </label>
             <input
               id="domain"
               type="text"
@@ -190,7 +209,9 @@ function App() {
           </div>
         </div>
         <div className="flex flex-col w-full gap-1">
-          <label htmlFor="demoVideo">Demo Video Link</label>
+          <label htmlFor="demoVideo" className="text-lg font-bold">
+            Demo Video Link
+          </label>
           <input
             id="demoVideo"
             type="url"
@@ -205,24 +226,45 @@ function App() {
           )}
         </div>
         <h2 className="text-xl font-bold">User Details</h2>
+        <div className="flex flex-col w-full gap-1">
+          <label htmlFor="username" className="text-lg font-bold">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Enter GitHub username"
+            className="w-full input input-bordered input-primary"
+            {...register("username")}
+          />
+          {errors.username && (
+            <div className="mt-1 text-red-500">
+              {String(errors.username.message)}
+            </div>
+          )}
+        </div>
         <div className="flex w-full gap-2">
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="avatarLink" className="text-lg font-bold">
+              Avatar Link
+            </label>
             <input
-              id="username"
-              type="text"
-              placeholder="Enter GitHub username"
+              id="avatarLink"
+              type="url"
+              placeholder="Enter link"
               className="w-full input input-bordered input-primary"
-              {...register("username")}
+              {...register("avatar")}
             />
-            {errors.username && (
+            {errors.avatar && (
               <div className="mt-1 text-red-500">
-                {String(errors.username.message)}
+                {String(errors.avatar.message)}
               </div>
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="githubProfileLink">GitHub</label>
+            <label htmlFor="githubProfileLink" className="text-lg font-bold">
+              GitHub
+            </label>
             <input
               id="githubProfileLink"
               type="url"
@@ -239,7 +281,9 @@ function App() {
         </div>
         <div className="flex w-full gap-2">
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="twitterProfileLink">Twitter</label>
+            <label htmlFor="twitterProfileLink" className="text-lg font-bold">
+              Twitter
+            </label>
             <input
               id="twitterProfileLink"
               type="url"
@@ -254,7 +298,9 @@ function App() {
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="linkedInProfileLink">LinkedIn</label>
+            <label htmlFor="linkedInProfileLink" className="text-lg font-bold">
+              LinkedIn
+            </label>
             <input
               id="linkedInProfileLink"
               type="url"
@@ -269,7 +315,9 @@ function App() {
             )}
           </div>
         </div>
-        <button className="btn btn-primary w-fit">Submit</button>
+        <div className="flex flex-row justify-end">
+          <button className="btn bg-[#3b82f6] text-white w-fit">Submit</button>
+        </div>
       </form>
     </div>
   );
