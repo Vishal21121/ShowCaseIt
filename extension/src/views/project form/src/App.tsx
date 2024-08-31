@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { userDataType } from "./types/user";
+import ProjectDescription from "./components/ProjectDescription";
 
 declare function acquireVsCodeApi(): any;
 
@@ -69,6 +70,7 @@ function App() {
   });
 
   const submitHandler: SubmitHandler<FormFields> = (data) => {
+    console.log(userData);
     console.log(data);
   };
 
@@ -119,16 +121,11 @@ function App() {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="box-border flex flex-col w-full gap-1">
           <label htmlFor="description" className="text-lg font-bold">
             Description
           </label>
-          <textarea
-            id="description"
-            className="resize-none textarea textarea-bordered textarea-primary"
-            placeholder="Enter project description"
-            {...register("description")}
-          ></textarea>
+          <ProjectDescription />
           {errors.description && (
             <div className="mt-1 text-red-500">
               {String(errors.description.message)}
