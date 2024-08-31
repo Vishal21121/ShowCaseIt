@@ -24,6 +24,7 @@ type Project struct {
 
 type User struct {
 	Username   string  `bson:"username" json:"username" validate:"required"`
+	AvatarLink string  `bson:"avatar" json:"avatar" validate:"required,url"`
 	GithubLink string  `bson:"gitHub" json:"gitHub" validate:"required,url"`
 	Twitter    *string `bson:"twitter" json:"twitter" validate:"omitempty,url"`
 	LinkedIn   *string `bson:"linkedIn" json:"linkedIn" validate:"omitempty,url"`
