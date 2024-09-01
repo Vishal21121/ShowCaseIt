@@ -1,5 +1,8 @@
 import { MdLogout } from "react-icons/md";
 import { FaRegFileLines } from "react-icons/fa6";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { useRef } from "react";
+import { useUserContext } from "../context/UserContext";
 
 interface IconProps {
   className?: string;
@@ -85,16 +88,38 @@ function UserIcon(props: IconProps) {
   );
 }
 
-function FloatingDock({ vscode }: { vscode: any }) {
+function FloatingDock({
+  vscode,
+  refetch,
+}: {
+  vscode: any;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<any, Error>>;
+}) {
   const sendLoadWebview = () => {
     vscode?.current?.postMessage({
       command: "loadProjectForm",
     });
   };
+  const userContext = useUserContext();
+
+  const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+  const handleRefetchClick = () => {
+    refetch();
+    userContext?.setProjectType("My Projects");
+    if (drawerCheckboxRef.current) {
+      drawerCheckboxRef.current.checked = false;
+    }
+  };
 
   return (
     <div className="flex items-center justify-around w-full p-2 rounded-full ring ring-primary">
-      <div className="tooltip tooltip-bottom" data-tip="Home">
+      <div
+        className="tooltip tooltip-bottom"
+        data-tip="Home"
+        onClick={() => userContext?.setProjectType("Explore Projects")}
+      >
         <HomeIcon className="cursor-pointer" />
       </div>
       <div className="tooltip tooltip-bottom" data-tip="Search">
@@ -109,7 +134,12 @@ function FloatingDock({ vscode }: { vscode: any }) {
       </div>
       <div className="tooltip tooltip-bottom" data-tip="User">
         <div className="drawer drawer-end">
-          <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+          <input
+            id="my-drawer-4"
+            type="checkbox"
+            className="drawer-toggle"
+            ref={drawerCheckboxRef}
+          />
           <div className="drawer-content">
             <label htmlFor="my-drawer-4" className="drawer-button">
               <UserIcon className="cursor-pointer drawer-button" />
@@ -130,7 +160,10 @@ function FloatingDock({ vscode }: { vscode: any }) {
                 </div>
               </li>
               <li>
-                <div className="flex flex-wrap gap-2">
+                <div
+                  className="flex flex-wrap gap-2"
+                  onClick={handleRefetchClick}
+                >
                   <FaRegFileLines className="text-xl text-white" />
                   <p className="text-lg text-white">My Posts</p>
                 </div>

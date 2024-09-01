@@ -1,9 +1,14 @@
 import { createContext, useContext } from "react";
 import { userDataType } from "../types/user";
+import { ProjectData } from "../types/project";
 
 type UserContextType = {
   userData: userDataType | null;
   setUserData: React.Dispatch<React.SetStateAction<userDataType | null>>;
+  posts: ProjectData[] | null;
+  setPosts: React.Dispatch<React.SetStateAction<ProjectData[] | null>>;
+  projectType: string;
+  setProjectType: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
