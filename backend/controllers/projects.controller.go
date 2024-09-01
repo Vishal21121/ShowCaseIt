@@ -15,6 +15,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type ProjectHandler struct {
@@ -42,13 +44,15 @@ func (pr *ProjectHandler) CreateProject(c echo.Context) error {
 		return utils.ThrowError(422, "Validation failed", errorMessages)
 	}
 
+	caser := cases.Title(language.English)
+
 	projectInsert := models.Project{
 		Title:       bodyData.Title,
 		Description: bodyData.Description,
 		RepoLink:    bodyData.RepoLink,
 		LiveLink:    bodyData.LiveLink,
 		TechStack:   bodyData.TechStack,
-		Domain:      bodyData.Domain,
+		Domain:      caser.String(bodyData.Domain),
 		DemoVideo:   bodyData.DemoVideo,
 		UserDetails: bodyData.UserDetails,
 		Likes:       0,

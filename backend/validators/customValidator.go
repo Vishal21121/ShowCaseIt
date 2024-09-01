@@ -1,6 +1,10 @@
 package validators
 
-import "github.com/go-playground/validator/v10"
+import (
+	"strings"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type CustomValidator struct {
 	Validator *validator.Validate
@@ -22,7 +26,7 @@ func CustomDomainValidator(fl validator.FieldLevel) bool {
 	}
 	domain := fl.Field().String()
 	for _, value := range validDomains {
-		if domain == value {
+		if strings.EqualFold(domain, value) {
 			return true
 		}
 	}
