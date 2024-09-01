@@ -1,3 +1,6 @@
+import { MdLogout } from "react-icons/md";
+import { FaRegFileLines } from "react-icons/fa6";
+
 interface IconProps {
   className?: string;
 }
@@ -105,7 +108,36 @@ function FloatingDock({ vscode }: { vscode: any }) {
         <PlusIcon className="cursor-pointer" />
       </div>
       <div className="tooltip tooltip-bottom" data-tip="User">
-        <UserIcon className="cursor-pointer" />
+        <div className="drawer drawer-end">
+          <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+          <div className="drawer-content">
+            <label htmlFor="my-drawer-4" className="drawer-button">
+              <UserIcon className="cursor-pointer drawer-button" />
+            </label>
+          </div>
+          <div className="z-10 drawer-side">
+            <label
+              htmlFor="my-drawer-4"
+              aria-label="close sidebar"
+              className="drawer-overlay"
+            ></label>
+            <ul className="w-1/2 min-h-full p-4 menu bg-base-200 text-base-content">
+              {/* Sidebar content here */}
+              <li>
+                <div className="flex flex-wrap gap-2">
+                  <MdLogout className="text-xl text-white " />
+                  <p className="text-lg text-white">Logout</p>
+                </div>
+              </li>
+              <li>
+                <div className="flex flex-wrap gap-2">
+                  <FaRegFileLines className="text-xl text-white" />
+                  <p className="text-lg text-white">My Posts</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );

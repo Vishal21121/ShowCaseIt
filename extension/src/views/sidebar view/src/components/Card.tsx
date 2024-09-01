@@ -6,17 +6,13 @@ function Card(): React.JSX.Element {
   return (
     <div className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content">
       <div className="flex flex-col w-full gap-2">
-        <p className="truncate">
+        <p className="text-lg truncate text-bold">
           Title: Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Ratione, hic?
         </p>
-        <p className="truncate">
-          Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Esse, fugiat?
-        </p>
         <div className="flex flex-wrap gap-4">
           <details className="dropdown">
-            <summary className="">Tech Stack</summary>
+            <summary className="text-sm">Tech Stack</summary>
             <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
               <li className="">
                 <a>Item 1</a>
@@ -29,11 +25,11 @@ function Card(): React.JSX.Element {
           <p className="badge badge-info">Web Dev</p>
           <div className="flex gap-2">
             <IoMdThumbsUp className="text-lg" />
-            <p>1000</p>
+            <p className="text-sm truncate">1000</p>
           </div>
           <div className="flex gap-2">
             <IoIosStats className="text-lg" />
-            <p>10000</p>
+            <p className="text-sm truncate">10000</p>
           </div>
         </div>
       </div>
