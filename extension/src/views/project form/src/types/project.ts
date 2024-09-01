@@ -27,7 +27,7 @@ export const schema = z.object({
   domain: z
     .string({ required_error: "Please provide domain" })
     .min(2, "Domain should be minimum of 2 characters"),
-  demoLink: z
+  demoVideo: z
     .string({ required_error: "Please provide demo link" })
     .url("Please provide valid url"),
   username: z

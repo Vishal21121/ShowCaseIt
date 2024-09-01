@@ -29,6 +29,9 @@ export async function activate(context: vscode.ExtensionContext) {
             command: "userData",
             data: context.globalState.get("userData"),
           });
+          break;
+        case "projectCreated":
+          panel.dispose();
       }
     });
   };

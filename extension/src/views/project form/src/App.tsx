@@ -12,6 +12,11 @@ declare function acquireVsCodeApi(): any;
 
 function App() {
   const [userData, setUserData] = useState<userDataType | null>(null);
+  const vscode = useRef(null);
+  if (vscode.current === null) {
+    vscode.current = acquireVsCodeApi();
+  }
+
   const {
     register,
     handleSubmit,
@@ -31,6 +36,11 @@ function App() {
           color: "#fff",
         },
       });
+      setTimeout(() => {
+        (vscode?.current as any).postMessage({
+          command: "projectCreated",
+        });
+      }, 2000);
     },
     onError(error) {
       console.log("error in app.tsx", error);
@@ -50,11 +60,6 @@ function App() {
     mutate(data);
   };
 
-  const vscode = useRef(null);
-  if (vscode.current === null) {
-    vscode.current = acquireVsCodeApi();
-  }
-
   useEffect(() => {
     (vscode?.current as any).postMessage({
       command: "loaded",
@@ -66,6 +71,7 @@ function App() {
           setUserData(message.data);
           setValue("username", message.data.login);
           setValue("githubLink", message.data.html_url);
+          setValue("avatar", message.data.avatar_url);
       }
     });
   }, []);
@@ -190,11 +196,11 @@ function App() {
             type="url"
             placeholder="Enter demo video link"
             className="w-full input input-bordered input-primary"
-            {...register("demoLink")}
+            {...register("demoVideo")}
           />
-          {errors.demoLink && (
+          {errors.demoVideo && (
             <div className="mt-1 text-red-500">
-              {String(errors.demoLink.message)}
+              {String(errors.demoVideo.message)}
             </div>
           )}
         </div>
