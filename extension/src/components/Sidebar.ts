@@ -49,6 +49,12 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
           break;
         case "loadProjectForm":
           vscode.commands.executeCommand("showcaseit.projectForm");
+          break;
+        case "logoutUser":
+          this.vscodeContext.globalState.update("userData", undefined);
+          webviewView.webview.postMessage({
+            command: "userLoggedOut",
+          });
       }
     });
   }

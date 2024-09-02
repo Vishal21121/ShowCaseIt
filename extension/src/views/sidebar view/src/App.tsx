@@ -38,6 +38,8 @@ function App() {
           userContext?.setUserData(message.data);
           screenContext?.setCurrentScreen("/");
           break;
+        case "userLoggedOut":
+          screenContext?.setCurrentScreen("/login");
       }
     });
   }, []);

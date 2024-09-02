@@ -154,7 +154,12 @@ function FloatingDock({
             <ul className="w-1/2 min-h-full p-4 menu bg-base-200 text-base-content">
               {/* Sidebar content here */}
               <li>
-                <div className="flex flex-wrap gap-2">
+                <div
+                  className="flex flex-wrap gap-2"
+                  onClick={() =>
+                    vscode?.current.postMessage({ command: "logoutUser" })
+                  }
+                >
                   <MdLogout className="text-xl text-white " />
                   <p className="text-lg text-white">Logout</p>
                 </div>
