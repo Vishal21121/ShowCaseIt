@@ -9,6 +9,10 @@ type UserContextType = {
   setPosts: React.Dispatch<React.SetStateAction<ProjectData[] | null>>;
   projectType: string;
   setProjectType: React.Dispatch<React.SetStateAction<string>>;
+  refetchContainer: (() => void) | null;
+  setRefetchContainer: React.Dispatch<
+    React.SetStateAction<(() => void) | null>
+  >;
 };
 
 const UserContext = createContext<UserContextType | null>(null);

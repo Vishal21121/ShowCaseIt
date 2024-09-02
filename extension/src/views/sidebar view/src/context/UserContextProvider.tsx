@@ -6,7 +6,10 @@ import { ProjectData } from "../types/project";
 function UserContextProvider({ children }: { children: React.JSX.Element }) {
   const [userData, setUserData] = useState<userDataType | null>(null);
   const [posts, setPosts] = useState<ProjectData[] | null>(null);
-  const [projectType, setProjectType] = useState<string>("Explore Projects");
+  const [projectType, setProjectType] = useState<string>("home");
+  const [refetchContainer, setRefetchContainer] = useState<(() => void) | null>(
+    null
+  );
 
   return (
     <UserContext.Provider
@@ -17,6 +20,8 @@ function UserContextProvider({ children }: { children: React.JSX.Element }) {
         setPosts,
         projectType,
         setProjectType,
+        refetchContainer,
+        setRefetchContainer,
       }}
     >
       {children}

@@ -1,6 +1,5 @@
 import { MdLogout } from "react-icons/md";
 import { FaRegFileLines } from "react-icons/fa6";
-import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useUserContext } from "../context/UserContext";
 
@@ -93,9 +92,7 @@ function FloatingDock({
   refetch,
 }: {
   vscode: any;
-  refetch: (
-    options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  refetch: (() => void) | null | undefined;
 }) {
   const sendLoadWebview = () => {
     vscode?.current?.postMessage({
@@ -106,8 +103,10 @@ function FloatingDock({
 
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   const handleRefetchClick = () => {
-    refetch();
-    userContext?.setProjectType("My Projects");
+    userContext?.setProjectType("user");
+    if (refetch) {
+      refetch();
+    }
     if (drawerCheckboxRef.current) {
       drawerCheckboxRef.current.checked = false;
     }
@@ -118,7 +117,7 @@ function FloatingDock({
       <div
         className="tooltip tooltip-bottom"
         data-tip="Home"
-        onClick={() => userContext?.setProjectType("Explore Projects")}
+        onClick={() => userContext?.setProjectType("home")}
       >
         <HomeIcon className="cursor-pointer" />
       </div>
