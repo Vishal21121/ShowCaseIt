@@ -230,7 +230,7 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 	}
 
 	// finding all the elements based on the filter and the pagination
-	findOptions := options.Find().SetLimit(int64(limit)).SetSkip(int64(startIndex))
+	findOptions := options.Find().SetSort(bson.D{{Key: "likes", Value: -1}}).SetLimit(int64(limit)).SetSkip(int64(startIndex))
 	curr, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{
 		filterKey: bson.M{
 			"$regex":   unknownValue,
