@@ -1,6 +1,7 @@
 import { useUserContext } from "../context/UserContext";
 import FloatingDock from "../components/FloatingDock";
 import UserFeed from "../components/UserFeed";
+import HomeFeed from "../components/HomeFeed";
 
 function ProjectsHomePage({ vscode }: { vscode: any }): React.JSX.Element {
   const userContext = useUserContext();
@@ -22,7 +23,7 @@ function ProjectsHomePage({ vscode }: { vscode: any }): React.JSX.Element {
           ? "Explore Projects"
           : "My Projects"}
       </h1>
-      {userContext?.projectType === "user" ? <UserFeed /> : ""}
+      {userContext?.projectType === "user" ? <UserFeed /> : <HomeFeed />}
     </div>
   );
 }
