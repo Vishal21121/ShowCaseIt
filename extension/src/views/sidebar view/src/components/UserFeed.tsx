@@ -62,6 +62,7 @@ function UserFeed() {
             watched={el.watched}
             techStack={el.techStack}
             username={el.userDetails.username}
+            domain={el.domain}
           />
         ))}
     </div>

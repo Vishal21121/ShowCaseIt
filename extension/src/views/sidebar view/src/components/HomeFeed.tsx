@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { getInfiniteProjects } from "../utils/api";
 import { RotatingLines } from "react-loader-spinner";
 import Card from "./Card";
@@ -7,23 +7,17 @@ import { ProjectData } from "../types/project";
 import { useInView } from "react-intersection-observer";
 
 function HomeFeed() {
-  const { ref, inView, entry } = useInView({
+  const { ref, inView } = useInView({
     threshold: 1,
   });
-  const {
-    data,
-    error,
-    status,
-    fetchNextPage,
-    isFetchingNextPage,
-    hasNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["items"],
-    queryFn: getInfiniteProjects,
-    initialPageParam: 1,
-    // lastPage contains the response object
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-  });
+  const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["items"],
+      queryFn: getInfiniteProjects,
+      initialPageParam: 1,
+      // lastPage contains the response object
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    });
 
   console.log("data from HomeFeed", data?.pages[0]);
 
@@ -60,6 +54,7 @@ function HomeFeed() {
                     watched={el.watched}
                     techStack={el.techStack}
                     username={el.userDetails.username}
+                    domain={el.domain}
                   />
                 );
               })}
@@ -75,16 +70,10 @@ function HomeFeed() {
             ariaLabel="rotating-lines-loading"
           />
         )}
-        {/* {hasNextPage && (
-        <button
-          className="p-4 mx-auto bg-gray-300 rounded w-fit"
-          onClick={() => fetchNextPage()}
-        >
-          {isFetchingNextPage ? "Loading..." : "Load More"}
-        </button>
-      )} */}
         {!hasNextPage && status != "pending" && (
-          <p className="text-neutral-content">Yay! You have seen it all 😊</p>
+          <p className="mx-auto text-neutral-content">
+            Yay! You have seen it all 😊
+          </p>
         )}
         <div ref={ref} style={{ height: "1px" }}></div>
       </div>

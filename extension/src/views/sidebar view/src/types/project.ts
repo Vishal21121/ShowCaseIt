@@ -30,4 +30,5 @@ export type CardData = {
   avatar: string;
   username: string;
   techStack: string[];
+  domain: string;
 };
