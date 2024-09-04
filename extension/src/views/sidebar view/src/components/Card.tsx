@@ -12,12 +12,20 @@ function Card({
   watched,
   techStack,
   domain,
+  vscode,
+  el,
 }: CardData): React.JSX.Element {
-  console.log("Domain");
+  const callLoadCommandWithData = () => {
+    vscode?.current.postMessage({
+      command: "loadProjectRender",
+      data: el,
+    });
+  };
   return (
     <div
       className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content"
       id={_id}
+      onClick={callLoadCommandWithData}
     >
       <div className="flex flex-col w-full gap-2">
         <div className="flex items-center w-10 h-10 gap-2">

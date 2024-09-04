@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
 import { useEffect } from "react";
 
-function UserFeed() {
+function UserFeed({ vscode }: { vscode: any }) {
   const userContext = useUserContext();
   console.log("home page", userContext?.userData);
 
@@ -54,6 +54,8 @@ function UserFeed() {
         userContext?.posts?.length > 0 &&
         userContext?.posts.map((el) => (
           <Card
+            el={el}
+            vscode={vscode}
             key={el._id}
             title={el.title}
             _id={el._id}

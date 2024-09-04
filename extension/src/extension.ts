@@ -4,13 +4,16 @@ import vscode from "vscode";
 import { MySidebarViewProvider } from "./components/Sidebar";
 import { Credentials } from "./githubLogin/credentials";
 import { displayProjectForm } from "./components/ProjectForm";
+import { renderProject } from "./components/ProjectRender";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+  let currentProjectData = {};
   const mySidebarProvider = new MySidebarViewProvider(
     context.extensionUri,
-    context
+    context,
+    currentProjectData
   );
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
@@ -40,6 +43,27 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       projectCreateFormCommand,
       projectCreateFormCommandHandler
+    )
+  );
+
+  // displayProjectForm for creating rendering the project
+  const projectRenderCommandHandler = () => {
+    const panel = renderProject(context, "Project Render");
+    panel.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "loaded":
+          panel.webview.postMessage({
+            command: "projectData",
+            data: mySidebarProvider.currentProjectData,
+          });
+      }
+    });
+  };
+  const projectRenderCommand = "showcaseit.projectRender";
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      projectRenderCommand,
+      projectRenderCommandHandler
     )
   );
 

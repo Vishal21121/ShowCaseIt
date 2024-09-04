@@ -9,13 +9,16 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "showcaseit.sidebarView";
   public webviewViewContainer: vscode.WebviewView | undefined;
   public vscodeContext: vscode.ExtensionContext;
+  public currentProjectData = {};
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
-    private readonly _context: vscode.ExtensionContext
+    private readonly _context: vscode.ExtensionContext,
+    private readonly _currentProjectObj: Object
   ) {
     this._extensionUri = _extensionUri;
     this.vscodeContext = _context;
+    this.currentProjectData = _currentProjectObj;
   }
 
   public resolveWebviewView(
@@ -55,6 +58,10 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
           webviewView.webview.postMessage({
             command: "userLoggedOut",
           });
+          break;
+        case "loadProjectRender":
+          vscode.commands.executeCommand("showcaseit.projectRender");
+          this.currentProjectData = message.data;
       }
     });
   }

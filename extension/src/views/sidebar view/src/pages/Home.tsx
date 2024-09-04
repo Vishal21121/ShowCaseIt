@@ -23,7 +23,11 @@ function ProjectsHomePage({ vscode }: { vscode: any }): React.JSX.Element {
           ? "Explore Projects"
           : "My Projects"}
       </h1>
-      {userContext?.projectType === "user" ? <UserFeed /> : <HomeFeed />}
+      {userContext?.projectType === "user" ? (
+        <UserFeed vscode={vscode} />
+      ) : (
+        <HomeFeed vscode={vscode} />
+      )}
     </div>
   );
 }

@@ -40,7 +40,7 @@ function App() {
         (vscode?.current as any).postMessage({
           command: "projectCreated",
         });
-      }, 2000);
+      }, 500);
     },
     onError(error) {
       console.log("error in app.tsx", error);

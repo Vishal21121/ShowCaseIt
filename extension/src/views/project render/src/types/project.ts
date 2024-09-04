@@ -21,16 +21,3 @@ export type ProjectData = {
   userDetails: UserDetails;
   watched: number;
 };
-
-export type CardData = {
-  _id: string;
-  title: string;
-  watched: number;
-  likes: number;
-  avatar: string;
-  username: string;
-  techStack: string[];
-  domain: string;
-  vscode: any;
-  el: ProjectData;
-};

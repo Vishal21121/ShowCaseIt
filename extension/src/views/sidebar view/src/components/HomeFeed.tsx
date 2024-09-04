@@ -6,7 +6,7 @@ import Card from "./Card";
 import { ProjectData } from "../types/project";
 import { useInView } from "react-intersection-observer";
 
-function HomeFeed() {
+function HomeFeed({ vscode }: { vscode: any }) {
   const { ref, inView } = useInView({
     threshold: 1,
   });
@@ -46,6 +46,8 @@ function HomeFeed() {
                 console.log(el);
                 return (
                   <Card
+                    el={el}
+                    vscode={vscode}
                     key={el._id}
                     title={el.title}
                     _id={el._id}
