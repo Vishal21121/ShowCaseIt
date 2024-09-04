@@ -1,3 +1,5 @@
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+
 export type UserDetails = {
   avatar: string;
   gitHub: string;
@@ -24,4 +26,7 @@ export type ProjectData = {
 export type CardData = {
   vscode: any;
   el: ProjectData;
+  refetch?: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<any, Error>>;
 };

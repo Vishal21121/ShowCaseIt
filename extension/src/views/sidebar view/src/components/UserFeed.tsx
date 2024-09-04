@@ -47,7 +47,9 @@ function UserFeed({ vscode }: { vscode: any }) {
       )}
       {data &&
         data?.map((el: ProjectData) => {
-          return <Card el={el} vscode={vscode} key={el._id} />;
+          return (
+            <Card el={el} vscode={vscode} key={el._id} refetch={refetch} />
+          );
         })}
     </div>
   );

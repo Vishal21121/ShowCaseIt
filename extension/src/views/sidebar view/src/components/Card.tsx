@@ -2,26 +2,68 @@ import React from "react";
 import { IoMdThumbsUp } from "react-icons/io";
 import { IoIosStats } from "react-icons/io";
 import { CardData } from "../types/project";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { useUserContext } from "../context/UserContext";
+import { deleteProject } from "../utils/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-function Card({ vscode, el }: CardData): React.JSX.Element {
+function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
+  const userContext = useUserContext();
+  const queryClient = useQueryClient();
+
   const callLoadCommandWithData = () => {
     vscode?.current.postMessage({
       command: "loadProjectRender",
       data: el,
     });
   };
+
+  const { error, isPending, isSuccess, mutate } = useMutation({
+    mutationKey: ["project", "delete"],
+    mutationFn: (id: string) => deleteProject(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: true,
+      });
+      if (refetch) {
+        refetch();
+      }
+    },
+  });
+
   return (
     <div
       className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content"
       id={el._id}
-      onClick={callLoadCommandWithData}
     >
       <div className="flex flex-col w-full gap-2">
-        <div className="flex items-center w-10 h-10 gap-2">
-          <img className="rounded-full" src={el.userDetails.avatar} alt="" />
-          <p className="font-bold">{el.userDetails.username}</p>
+        <div className="flex flex-wrap items-center justify-between w-full gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <img
+              className="w-10 h-10 rounded-full"
+              src={el.userDetails.avatar}
+              alt=""
+            />
+            <p className="font-bold">{el.userDetails.username}</p>
+          </div>
+          {userContext?.projectType === "user" && (
+            <div className="flex flex-wrap gap-2">
+              <MdDeleteOutline
+                className="text-xl text-secondary hover:text-primary"
+                onClick={() => mutate(el._id)}
+              />
+              <FaRegEdit className="text-xl text-secondary hover:text-primary" />
+            </div>
+          )}
         </div>
-        <p className="text-lg truncate text-bold">{el.title}</p>
+        <p
+          className="text-lg truncate text-bold"
+          onClick={callLoadCommandWithData}
+        >
+          {el.title}
+        </p>
         <div className="flex flex-wrap gap-4">
           {/* <details className="dropdown">
             <summary className="text-sm">Tech Stack</summary>
