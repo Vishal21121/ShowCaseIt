@@ -19,8 +19,6 @@ function HomeFeed({ vscode }: { vscode: any }) {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     });
 
-  console.log("data from HomeFeed", data?.pages[0]);
-
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -30,7 +28,7 @@ function HomeFeed({ vscode }: { vscode: any }) {
   return (
     <>
       <div className="pb-4 py-1 w-full h-[78vh] flex flex-col items-center gap-4 overflow-auto px-2">
-        {status === "pending" && (
+        {/* {status === "pending" && (
           <RotatingLines
             visible={true}
             width="48"
@@ -38,32 +36,17 @@ function HomeFeed({ vscode }: { vscode: any }) {
             animationDuration="0.75"
             ariaLabel="rotating-lines-loading"
           />
-        )}
+        )} */}
         {data?.pages?.map((page) => {
           return (
-            <div key={page.currentPage} className="flex flex-col gap-4">
+            <div key={page.currentPage} className="flex flex-col w-full gap-4">
               {page?.data?.map((el: ProjectData) => {
-                console.log(el);
-                return (
-                  <Card
-                    el={el}
-                    vscode={vscode}
-                    key={el._id}
-                    title={el.title}
-                    _id={el._id}
-                    avatar={el.userDetails.avatar}
-                    likes={el.likes}
-                    watched={el.watched}
-                    techStack={el.techStack}
-                    username={el.userDetails.username}
-                    domain={el.domain}
-                  />
-                );
+                return <Card el={el} vscode={vscode} key={el._id} />;
               })}
             </div>
           );
         })}
-        {isFetchingNextPage && (
+        {status === "pending" && (
           <RotatingLines
             visible={true}
             width="24"

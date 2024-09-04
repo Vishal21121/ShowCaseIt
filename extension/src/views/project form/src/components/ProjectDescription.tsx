@@ -31,8 +31,11 @@ function ProjectDescription({
           className="tab"
           aria-label="Preview"
         />
-        <div role="tabpanel" className="p-4 tab-content h-[420px]">
-          <MarkDownRenderer code={code} />
+        <div
+          role="tabpanel"
+          className="p-4 tab-content max-h-[420px] overflow-auto"
+        >
+          <MarkDownRenderer content={code} />
         </div>
       </div>
     </div>

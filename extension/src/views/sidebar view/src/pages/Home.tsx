@@ -5,7 +5,6 @@ import HomeFeed from "../components/HomeFeed";
 
 function ProjectsHomePage({ vscode }: { vscode: any }): React.JSX.Element {
   const userContext = useUserContext();
-  console.log("home page", userContext?.userData);
 
   return (
     <div className="flex flex-col items-center w-full gap-4 p-2">

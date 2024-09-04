@@ -9,7 +9,6 @@ export type UserDetails = {
 export type ProjectData = {
   _id: string;
   createdAt: string;
-  demoVideo: string;
   description: string;
   domain: string;
   likes: number;

@@ -3,18 +3,7 @@ import { IoMdThumbsUp } from "react-icons/io";
 import { IoIosStats } from "react-icons/io";
 import { CardData } from "../types/project";
 
-function Card({
-  title,
-  _id,
-  avatar,
-  likes,
-  username,
-  watched,
-  techStack,
-  domain,
-  vscode,
-  el,
-}: CardData): React.JSX.Element {
+function Card({ vscode, el }: CardData): React.JSX.Element {
   const callLoadCommandWithData = () => {
     vscode?.current.postMessage({
       command: "loadProjectRender",
@@ -24,15 +13,15 @@ function Card({
   return (
     <div
       className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content"
-      id={_id}
+      id={el._id}
       onClick={callLoadCommandWithData}
     >
       <div className="flex flex-col w-full gap-2">
         <div className="flex items-center w-10 h-10 gap-2">
-          <img className="rounded-full" src={avatar} alt="" />
-          <p className="font-bold">{username}</p>
+          <img className="rounded-full" src={el.userDetails.avatar} alt="" />
+          <p className="font-bold">{el.userDetails.username}</p>
         </div>
-        <p className="text-lg truncate text-bold">{title}</p>
+        <p className="text-lg truncate text-bold">{el.title}</p>
         <div className="flex flex-wrap gap-4">
           {/* <details className="dropdown">
             <summary className="text-sm">Tech Stack</summary>
@@ -45,14 +34,14 @@ function Card({
                 ))}
             </ul>
           </details> */}
-          <p className="badge badge-info">{domain}</p>
+          <p className="badge badge-info">{el.domain}</p>
           <div className="flex gap-2">
             <IoMdThumbsUp className="text-lg" />
-            <p className="text-sm truncate">{likes}</p>
+            <p className="text-sm truncate">{el.likes}</p>
           </div>
           <div className="flex gap-2">
             <IoIosStats className="text-lg" />
-            <p className="text-sm truncate">{watched}</p>
+            <p className="text-sm truncate">{el.watched}</p>
           </div>
         </div>
       </div>

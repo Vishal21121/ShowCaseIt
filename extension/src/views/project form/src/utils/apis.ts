@@ -10,7 +10,6 @@ async function createProject(data: FormFields) {
     liveLink: data.liveLink,
     techStack,
     domain: data.domain,
-    demoVideo: data.demoVideo,
     userDetails: {
       username: data.username,
       avatar: data.avatar,

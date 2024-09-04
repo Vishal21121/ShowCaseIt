@@ -7,8 +7,6 @@ import { useEffect, useRef } from "react";
 declare function acquireVsCodeApi(): any;
 
 function App() {
-  console.log("rendered");
-
   const userContext = useUserContext();
   const screenContext = useScreenContext();
 
@@ -34,7 +32,6 @@ function App() {
           screenContext?.setCurrentScreen("/");
           break;
         case "userData":
-          console.log(message.data);
           userContext?.setUserData(message.data);
           screenContext?.setCurrentScreen("/");
           break;
@@ -45,7 +42,6 @@ function App() {
   }, []);
 
   const renderPage = () => {
-    console.log(screenContext?.currentScreen);
     switch (screenContext?.currentScreen) {
       case "/login":
         return <Login vscode={vscode} />;

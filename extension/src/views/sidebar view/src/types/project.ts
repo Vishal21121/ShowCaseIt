@@ -9,7 +9,6 @@ export type UserDetails = {
 export type ProjectData = {
   _id: string;
   createdAt: string;
-  demoVideo: string;
   description: string;
   domain: string;
   likes: number;
@@ -23,14 +22,6 @@ export type ProjectData = {
 };
 
 export type CardData = {
-  _id: string;
-  title: string;
-  watched: number;
-  likes: number;
-  avatar: string;
-  username: string;
-  techStack: string[];
-  domain: string;
   vscode: any;
   el: ProjectData;
 };

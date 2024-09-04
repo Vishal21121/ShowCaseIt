@@ -1,7 +1,5 @@
 import { FaGithub } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import ReactPlayer from "react-player";
-import { FaPlayCircle } from "react-icons/fa";
 import MarkDownContent from "./components/MarkDownContent";
 import Stats from "./components/Stats";
 import Buttons from "./components/Buttons";
@@ -27,7 +25,6 @@ function App() {
       switch (message.command) {
         case "projectData":
           if (message.data) {
-            console.log("data from extension", message.data);
             setProjectData(message.data);
           }
       }
@@ -36,17 +33,6 @@ function App() {
 
   return (
     <div className="flex flex-col w-full gap-4 p-4">
-      {/* Video section */}
-      <ReactPlayer
-        url="https://youtu.be/nKrO2UCi60g"
-        config={{ youtube: { playerVars: { showInfo: 0 } } }}
-        controls={true}
-        muted={true}
-        playIcon={<FaPlayCircle />}
-        width="1024px"
-        height="500px"
-        style={{ margin: "auto" }}
-      />
       {/* title */}
       <h1 className="mx-auto text-4xl font-bold text-white text-wrap">
         {projectData?.title}
@@ -55,22 +41,24 @@ function App() {
       {/* Github and Link */}
       <div className="flex flex-col items-center gap-4">
         <div className="flex gap-4 mt-4">
-          <button className="btn btn-secondary btn-outline">
+          <a
+            href={projectData?.liveLink}
+            className="btn btn-secondary btn-outline"
+          >
             <div className="flex items-center justify-center gap-2">
               <p className="text-base text-white">View on GitHub</p>
-              <a href={projectData?.repoLink}>
-                <FaGithub className="text-2xl text-white " />
-              </a>
+              <FaGithub className="text-2xl text-white " />
             </div>
-          </button>
-          <button className="btn btn-secondary btn-outline">
+          </a>
+          <a
+            className="btn btn-secondary btn-outline"
+            href={projectData?.liveLink}
+          >
             <div className="flex items-center justify-center gap-2">
               <p className="text-base text-white">Live Link</p>
-              <a href={projectData?.liveLink}>
-                <FaExternalLinkAlt className="text-2xl text-white" />
-              </a>
+              <FaExternalLinkAlt className="text-2xl text-white" />
             </div>
-          </button>
+          </a>
         </div>
 
         {/* User Short info */}

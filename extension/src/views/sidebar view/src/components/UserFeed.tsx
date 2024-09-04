@@ -5,10 +5,10 @@ import { getUserPost } from "../utils/api";
 import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
 import { useEffect } from "react";
+import { ProjectData } from "../types/project";
 
 function UserFeed({ vscode }: { vscode: any }) {
   const userContext = useUserContext();
-  console.log("home page", userContext?.userData);
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["posts"],
@@ -16,12 +16,7 @@ function UserFeed({ vscode }: { vscode: any }) {
     enabled: false,
   });
 
-  if (data) {
-    userContext?.setPosts(data);
-  }
-
   if (error) {
-    console.log("home error", error);
     toast.error(error.message, {
       style: {
         borderRadius: "10px",
@@ -50,23 +45,10 @@ function UserFeed({ vscode }: { vscode: any }) {
           ariaLabel="rotating-lines-loading"
         />
       )}
-      {userContext?.posts &&
-        userContext?.posts?.length > 0 &&
-        userContext?.posts.map((el) => (
-          <Card
-            el={el}
-            vscode={vscode}
-            key={el._id}
-            title={el.title}
-            _id={el._id}
-            avatar={el.userDetails.avatar}
-            likes={el.likes}
-            watched={el.watched}
-            techStack={el.techStack}
-            username={el.userDetails.username}
-            domain={el.domain}
-          />
-        ))}
+      {data &&
+        data?.map((el: ProjectData) => {
+          return <Card el={el} vscode={vscode} key={el._id} />;
+        })}
     </div>
   );
 }

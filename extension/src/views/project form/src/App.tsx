@@ -43,7 +43,6 @@ function App() {
       }, 500);
     },
     onError(error) {
-      console.log("error in app.tsx", error);
       toast.error(error.message, {
         style: {
           borderRadius: "10px",
@@ -55,8 +54,6 @@ function App() {
   });
 
   const submitHandler: SubmitHandler<FormFields> = (data) => {
-    // console.log(userData);
-    // console.log("data", data);
     mutate(data);
   };
 
@@ -186,23 +183,6 @@ function App() {
               </div>
             )}
           </div>
-        </div>
-        <div className="flex flex-col w-full gap-1">
-          <label htmlFor="demoVideo" className="text-lg font-bold">
-            Demo Video Link
-          </label>
-          <input
-            id="demoVideo"
-            type="url"
-            placeholder="Enter demo video link"
-            className="w-full input input-bordered input-primary"
-            {...register("demoVideo")}
-          />
-          {errors.demoVideo && (
-            <div className="mt-1 text-red-500">
-              {String(errors.demoVideo.message)}
-            </div>
-          )}
         </div>
         <h2 className="text-xl font-bold">User Details</h2>
         <div className="flex flex-col w-full gap-1">
