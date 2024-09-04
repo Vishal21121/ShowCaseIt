@@ -53,7 +53,6 @@ func (pr *ProjectHandler) CreateProject(c echo.Context) error {
 		LiveLink:    bodyData.LiveLink,
 		TechStack:   bodyData.TechStack,
 		Domain:      caser.String(bodyData.Domain),
-		DemoVideo:   bodyData.DemoVideo,
 		UserDetails: bodyData.UserDetails,
 		Likes:       0,
 		Watched:     0,
@@ -133,7 +132,6 @@ func (pr *ProjectHandler) UpdateProject(c echo.Context) error {
 			"description": bodyData.Description,
 			"liveLink":    bodyData.LiveLink,
 			"techStack":   bodyData.TechStack,
-			"demoVideo":   bodyData.DemoVideo,
 		},
 	}, options.FindOneAndUpdate().SetReturnDocument(options.After))
 

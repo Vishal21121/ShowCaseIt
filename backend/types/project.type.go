@@ -11,7 +11,6 @@ type ProjectCreateBody struct {
 	LiveLink    *string     `json:"liveLink"  bson:"liveLink" validate:"omitempty,url"`
 	TechStack   []string    `json:"techStack" bson:"techStack" validate:"required,min=1,dive,required"`
 	Domain      string      `json:"domain" bson:"domain" validate:"domain"`
-	DemoVideo   *string     `json:"demoVideo" bson:"demoVideo" validate:"omitempty,url"`
 	UserDetails models.User `json:"userDetails" bson:"userDetails" validate:"required"`
 }
 
@@ -21,7 +20,6 @@ type ProjectUpdateBody struct {
 	Description string   `json:"description" validate:"required"`
 	LiveLink    *string  `json:"liveLink" validate:"omitempty,url"`
 	TechStack   []string `json:"techStack" validate:"required,min=1,dive,required"`
-	DemoVideo   *string  `json:"demoVideo" validate:"omitempty,url"`
 }
 
 type ProjectId struct {
