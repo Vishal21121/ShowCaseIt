@@ -4,7 +4,22 @@ import (
 	"time"
 )
 
-type Project struct {
+type ProjectInsert struct {
+	Title       string    `bson:"title" json:"title"`
+	Description string    `bson:"description" json:"description"`
+	RepoLink    string    `bson:"repoLink" json:"repoLink"`
+	LiveLink    *string   `bson:"liveLink" json:"liveLink"`
+	TechStack   []string  `bson:"techStack" json:"techStack"`
+	Domain      string    `bson:"domain" json:"domain"`
+	UserDetails User      `bson:"userDetails" json:"userDetails"`
+	Likes       int       `bson:"likes" json:"likes"`
+	Watched     int       `bson:"watched" json:"watched"`
+	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
+	UpdatedAt   time.Time `bson:"updatedAt" json:"updatedAt"`
+}
+
+type ProjectSend struct {
+	ID          string    `bson:"_id" json:"id"`
 	Title       string    `bson:"title" json:"title"`
 	Description string    `bson:"description" json:"description"`
 	RepoLink    string    `bson:"repoLink" json:"repoLink"`

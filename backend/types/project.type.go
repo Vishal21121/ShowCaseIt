@@ -27,7 +27,12 @@ type ProjectId struct {
 }
 
 type FilterProject struct {
-	CurrentPage int              `json:"currentPage"`
-	NextPage    *int             `json:"nextPage"`
-	Data        []models.Project `json:"data"`
+	CurrentPage int                  `json:"currentPage"`
+	NextPage    *int                 `json:"nextPage"`
+	Data        []models.ProjectSend `json:"data"`
+}
+
+type IncrementLikesOrViews struct {
+	ID    string `json:"id"  validate:"required,mongodb"`
+	Field string `json:"field"`
 }

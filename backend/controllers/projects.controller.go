@@ -46,7 +46,7 @@ func (pr *ProjectHandler) CreateProject(c echo.Context) error {
 
 	caser := cases.Title(language.English)
 
-	projectInsert := models.Project{
+	projectInsert := models.ProjectInsert{
 		Title:       bodyData.Title,
 		Description: bodyData.Description,
 		RepoLink:    bodyData.RepoLink,
@@ -156,11 +156,9 @@ func (pr *ProjectHandler) DeleteProject(c echo.Context) error {
 		return utils.ThrowError(400, bindError.Error(), []string{})
 	}
 
-	fmt.Printf("%v\n", projectId)
 	// validate the id
 	validationError := validators.Validator.Struct(projectId)
 	if validationError != nil {
-		fmt.Println("binderr")
 		return utils.ThrowError(400, "Please provide valid MongoDB ID", []string{})
 	}
 
@@ -210,7 +208,6 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 		filterKey = "userDetails.username"
 	}
 
-	fmt.Println(filterKey)
 	// finding the count of documents and setting the currentPage and nextPage property
 	projectCount, countError := pr.ProjectCollection.CountDocuments(c.Request().Context(), bson.M{filterKey: bson.M{
 		"$regex":   unknownValue,
@@ -228,7 +225,7 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 	}
 
 	// finding all the elements based on the filter and the pagination
-	findOptions := options.Find().SetSort(bson.D{{Key: "likes", Value: -1}}).SetLimit(int64(limit)).SetSkip(int64(startIndex))
+	findOptions := options.Find().SetLimit(int64(limit)).SetSkip(int64(startIndex))
 	curr, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{
 		filterKey: bson.M{
 			"$regex":   unknownValue,
@@ -239,7 +236,7 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 		return utils.ThrowError(500, findError.Error(), []string{})
 	}
 
-	var filteredProjects []models.Project
+	var filteredProjects []models.ProjectSend
 	cursorErr := curr.All(c.Request().Context(), &filteredProjects)
 	if cursorErr != nil {
 		return utils.ThrowError(500, cursorErr.Error(), []string{})
@@ -266,11 +263,10 @@ func (pr *ProjectHandler) GetProjectsBySort(c echo.Context) error {
 	findOptions := options.Find().SetSort(bson.M{sorter: -1}).SetLimit(3)
 	cursor, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{}, findOptions)
 	if findError != nil {
-		fmt.Println("findError")
 		return utils.ThrowError(500, findError.Error(), []string{})
 	}
 
-	var projects []models.Project
+	var projects []models.ProjectSend
 	cursorError := cursor.All(c.Request().Context(), &projects)
 	if cursorError != nil {
 		return utils.ThrowError(500, cursorError.Error(), []string{})
@@ -283,6 +279,45 @@ func (pr *ProjectHandler) GetProjectsBySort(c echo.Context) error {
 	return c.JSON(200, types.ApiResponse{
 		Data:    projects,
 		Message: "Projects fetched successfully",
+		Success: true,
+	})
+
+}
+
+func (pr *ProjectHandler) IncrementLikesOrViews(c echo.Context) error {
+	var bodyData types.IncrementLikesOrViews
+
+	bindError := c.Bind(&bodyData)
+
+	if bindError != nil {
+		utils.ThrowError(500, bindError.Error(), []string{})
+	}
+
+	if bodyData.Field == "" || bodyData.ID == "" {
+		return utils.ThrowError(400, "Please provide field or Id", []string{})
+	}
+
+	objectIdFromString, _ := primitive.ObjectIDFromHex(bodyData.ID)
+
+	var projectFound models.ProjectSend
+
+	pr.ProjectCollection.FindOne(c.Request().Context(), bson.M{"_id": objectIdFromString}).Decode(&projectFound)
+
+	if projectFound.ID == "" {
+		return utils.ThrowError(404, "Project does not exist", []string{})
+	}
+
+	var updatedDocument models.ProjectSend
+	pr.ProjectCollection.FindOneAndUpdate(
+		c.Request().Context(),
+		bson.M{"_id": objectIdFromString},
+		bson.M{"$inc": bson.M{bodyData.Field: 1}},
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+	).Decode(&updatedDocument)
+
+	return c.JSON(200, types.ApiResponse{
+		Data:    nil,
+		Message: fmt.Sprintf("Likes incremented successfully: %d", updatedDocument.Likes),
 		Success: true,
 	})
 

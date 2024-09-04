@@ -54,6 +54,7 @@ func main() {
 	projectRouter.DELETE("/delete", projectHandler.DeleteProject)
 	projectRouter.GET("/filter", projectHandler.GetProjectByFilter)
 	projectRouter.GET("/sort/:sortProp", projectHandler.GetProjectsBySort)
+	projectRouter.PATCH("/increment", projectHandler.IncrementLikesOrViews)
 
 	log.Fatal(e.Start(":8080"))
 }
