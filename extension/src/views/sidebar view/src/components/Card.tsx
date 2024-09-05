@@ -24,19 +24,14 @@ function Card({
 
   return (
     <div
-      className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content"
+      className="flex flex-col w-full gap-4 p-2 border rounded-md shadow-md cursor-pointer shadow-neutral"
       id={el.id}
     >
-      <div className="flex flex-col w-full gap-2">
+      <div className="flex flex-col w-full gap-4">
         <div className="flex flex-wrap items-center justify-between w-full gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <img
-              className="w-10 h-10 rounded-full"
-              src={el.userDetails.avatar}
-              alt=""
-            />
-            <p className="font-bold">{el.userDetails.username}</p>
-          </div>
+          <p className="p-2 text-black badge badge-success badge-outline">
+            {el.domain}
+          </p>
           {userContext?.projectType === "user" && (
             <div className="flex flex-wrap gap-2">
               <MdDeleteOutline
@@ -50,26 +45,34 @@ function Card({
           )}
         </div>
         <p
-          className="text-lg truncate text-bold"
+          className="text-lg font-bold text-white truncate"
           onClick={callLoadCommandWithData}
         >
           {el.title}
         </p>
         <div className="flex flex-wrap gap-4">
-          {/* <details className="dropdown">
-            <summary className="text-sm">Tech Stack</summary>
-            <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-              {techStack.length &&
-                techStack.map((el) => (
-                  <li>
-                    <a>{el}</a>
-                  </li>
+          <p className="text-lg font-bold text-white">Tech Stack:</p>
+          {
+            <div className="flex flex-wrap gap-2">
+              {el?.techStack.length &&
+                el?.techStack.map((el) => (
+                  <span className="badge badge-primary badge-outline">
+                    {el}
+                  </span>
                 ))}
-            </ul>
-          </details> */}
-          <p className="badge badge-info">{el.domain}</p>
+            </div>
+          }
+
           {userContext?.projectType === "home" && (
-            <>
+            <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <img
+                  className="w-10 h-10 rounded-full"
+                  src={el.userDetails.avatar}
+                  alt=""
+                />
+                <p className="font-bold">{el.userDetails.username}</p>
+              </div>
               <div
                 className="flex gap-2"
                 onClick={() => {
@@ -83,7 +86,7 @@ function Card({
                 <IoIosStats className="text-lg" />
                 <p className="text-sm truncate">{el.watched}</p>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
