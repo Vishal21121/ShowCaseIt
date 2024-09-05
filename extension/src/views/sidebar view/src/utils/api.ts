@@ -40,6 +40,7 @@ async function getInfiniteProjects({ pageParam }: { pageParam: number }) {
 }
 
 async function deleteProject(id: string) {
+  console.log("deleteProject", id);
   try {
     const response = await axios.delete(
       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/delete`,

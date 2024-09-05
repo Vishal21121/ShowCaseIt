@@ -27,11 +27,19 @@ export type CardData = {
   vscode: any;
   el: ProjectData;
   removePost?: (id: string) => void;
-  homeMutate?: UseMutateFunction<
+  updateMutate?: UseMutateFunction<
     any,
     Error,
     {
       field: string;
+      id: string;
+    },
+    unknown
+  >;
+  userDeleteMutate?: UseMutateFunction<
+    any,
+    Error,
+    {
       id: string;
     },
     unknown

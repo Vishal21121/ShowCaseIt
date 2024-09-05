@@ -5,39 +5,22 @@ import { CardData } from "../types/project";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
-import { deleteProject } from "../utils/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function Card({
   vscode,
   el,
-  removePost,
-  homeMutate,
+  updateMutate,
+  userDeleteMutate,
 }: CardData): React.JSX.Element {
   const userContext = useUserContext();
-  const queryClient = useQueryClient();
 
   const callLoadCommandWithData = () => {
-    homeMutate && homeMutate({ field: "watched", id: el.id });
+    updateMutate && updateMutate({ field: "watched", id: el.id });
     vscode?.current.postMessage({
       command: "loadProjectRender",
       data: el,
     });
   };
-
-  const { isPending, mutate } = useMutation({
-    mutationKey: ["project", "delete"],
-    mutationFn: (id: string) => deleteProject(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
-        exact: true,
-      });
-      if (removePost) {
-        removePost(el.id);
-      }
-    },
-  });
 
   return (
     <div
@@ -58,7 +41,9 @@ function Card({
             <div className="flex flex-wrap gap-2">
               <MdDeleteOutline
                 className="text-xl text-secondary hover:text-primary"
-                onClick={() => mutate(el.id)}
+                onClick={() =>
+                  userDeleteMutate && userDeleteMutate({ id: el.id })
+                }
               />
               <FaRegEdit className="text-xl text-secondary hover:text-primary" />
             </div>
@@ -83,19 +68,23 @@ function Card({
             </ul>
           </details> */}
           <p className="badge badge-info">{el.domain}</p>
-          <div
-            className="flex gap-2"
-            onClick={() => {
-              homeMutate && homeMutate({ field: "likes", id: el.id });
-            }}
-          >
-            <IoMdThumbsUp className="text-lg" />
-            <p className="text-sm truncate">{el.likes}</p>
-          </div>
-          <div className="flex gap-2">
-            <IoIosStats className="text-lg" />
-            <p className="text-sm truncate">{el.watched}</p>
-          </div>
+          {userContext?.projectType === "home" && (
+            <>
+              <div
+                className="flex gap-2"
+                onClick={() => {
+                  updateMutate && updateMutate({ field: "likes", id: el.id });
+                }}
+              >
+                <IoMdThumbsUp className="text-lg" />
+                <p className="text-sm truncate">{el.likes}</p>
+              </div>
+              <div className="flex gap-2">
+                <IoIosStats className="text-lg" />
+                <p className="text-sm truncate">{el.watched}</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

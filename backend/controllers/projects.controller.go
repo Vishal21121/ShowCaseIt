@@ -90,7 +90,7 @@ func (pr *ProjectHandler) GetProjects(c echo.Context) error {
 	}
 	defer cursor.Close(c.Request().Context())
 
-	var projects []bson.M
+	var projects []models.ProjectSend
 	if err := cursor.All(c.Request().Context(), &projects); err != nil {
 		return utils.ThrowError(500, err.Error(), []string{})
 	}

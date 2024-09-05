@@ -62,7 +62,7 @@ function HomeFeed({ vscode }: { vscode: any }) {
         {data?.pages?.map((page) => (
           <div key={page.currentPage} className="flex flex-col w-full gap-4">
             {page?.data?.map((el: ProjectData) => (
-              <Card el={el} vscode={vscode} key={el.id} homeMutate={mutate} />
+              <Card el={el} vscode={vscode} key={el.id} updateMutate={mutate} />
             ))}
           </div>
         ))}

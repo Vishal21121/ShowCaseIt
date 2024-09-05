@@ -1,7 +1,7 @@
 import Card from "../components/Card";
 import { useUserContext } from "../context/UserContext";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserPost } from "../utils/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteProject, getUserPost, updateWatchedOrLikes } from "../utils/api";
 import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
 import { useEffect } from "react";
@@ -11,6 +11,7 @@ function UserFeed({ vscode }: { vscode: any }) {
   const userContext = useUserContext();
   const queryClient = useQueryClient();
 
+  // Route to get user posts
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getUserPost(String(userContext?.userData?.login)),
@@ -27,12 +28,29 @@ function UserFeed({ vscode }: { vscode: any }) {
     });
   }
 
+  // refetch function to get the posts manually
   const refetchFunction = () => {
     refetch();
   };
 
+  // Mutation to delete the post
+  const { mutate } = useMutation({
+    mutationKey: ["project", "delete"],
+    mutationFn: ({ id }: { id: string }) => deleteProject(id),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: true,
+      });
+      if (removePost) {
+        removePost(variables.id);
+      }
+    },
+  });
+
+  // Function to remove the post from the UI
   function removePost(id: string) {
-    const filteredData = data?.filter((el: ProjectData) => el._id !== id);
+    const filteredData = data?.filter((el: ProjectData) => el.id !== id);
     queryClient.setQueryData(["posts"], filteredData);
   }
 
@@ -45,7 +63,7 @@ function UserFeed({ vscode }: { vscode: any }) {
       {isLoading && (
         <RotatingLines
           visible={true}
-          width="48"
+          width="24"
           strokeWidth="5"
           animationDuration="0.75"
           ariaLabel="rotating-lines-loading"
@@ -57,8 +75,9 @@ function UserFeed({ vscode }: { vscode: any }) {
             <Card
               el={el}
               vscode={vscode}
-              key={el._id}
+              key={el.id}
               removePost={removePost}
+              userDeleteMutate={mutate}
             />
           );
         })}
