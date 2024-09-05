@@ -1,4 +1,4 @@
-import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { UseMutateFunction } from "@tanstack/react-query";
 
 export type UserDetails = {
   avatar: string;
@@ -9,7 +9,7 @@ export type UserDetails = {
 };
 
 export type ProjectData = {
-  _id: string;
+  id: string;
   createdAt: string;
   description: string;
   domain: string;
@@ -26,7 +26,16 @@ export type ProjectData = {
 export type CardData = {
   vscode: any;
   el: ProjectData;
-  refetch?: (
-    options?: RefetchOptions
-  ) => Promise<QueryObserverResult<any, Error>>;
+  removePost?: (id: string) => void;
+  homeMutate?: UseMutateFunction<
+    any,
+    Error,
+    {
+      field: string;
+      id: string;
+    },
+    unknown
+  >;
 };
+
+export type ProjectField = "watched" | "likes";

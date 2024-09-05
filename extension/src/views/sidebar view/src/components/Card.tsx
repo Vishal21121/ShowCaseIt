@@ -8,18 +8,24 @@ import { useUserContext } from "../context/UserContext";
 import { deleteProject } from "../utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
+function Card({
+  vscode,
+  el,
+  removePost,
+  homeMutate,
+}: CardData): React.JSX.Element {
   const userContext = useUserContext();
   const queryClient = useQueryClient();
 
   const callLoadCommandWithData = () => {
+    homeMutate && homeMutate({ field: "watched", id: el.id });
     vscode?.current.postMessage({
       command: "loadProjectRender",
       data: el,
     });
   };
 
-  const { error, isPending, isSuccess, mutate } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationKey: ["project", "delete"],
     mutationFn: (id: string) => deleteProject(id),
     onSuccess: () => {
@@ -27,8 +33,8 @@ function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
         queryKey: ["posts"],
         exact: true,
       });
-      if (refetch) {
-        refetch();
+      if (removePost) {
+        removePost(el.id);
       }
     },
   });
@@ -36,7 +42,7 @@ function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
   return (
     <div
       className="flex flex-col w-full gap-2 p-2 rounded cursor-pointer ring ring-primary bg-primary-content"
-      id={el._id}
+      id={el.id}
     >
       <div className="flex flex-col w-full gap-2">
         <div className="flex flex-wrap items-center justify-between w-full gap-2">
@@ -52,7 +58,7 @@ function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
             <div className="flex flex-wrap gap-2">
               <MdDeleteOutline
                 className="text-xl text-secondary hover:text-primary"
-                onClick={() => mutate(el._id)}
+                onClick={() => mutate(el.id)}
               />
               <FaRegEdit className="text-xl text-secondary hover:text-primary" />
             </div>
@@ -77,7 +83,12 @@ function Card({ vscode, el, refetch }: CardData): React.JSX.Element {
             </ul>
           </details> */}
           <p className="badge badge-info">{el.domain}</p>
-          <div className="flex gap-2">
+          <div
+            className="flex gap-2"
+            onClick={() => {
+              homeMutate && homeMutate({ field: "likes", id: el.id });
+            }}
+          >
             <IoMdThumbsUp className="text-lg" />
             <p className="text-sm truncate">{el.likes}</p>
           </div>

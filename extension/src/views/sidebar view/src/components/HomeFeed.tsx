@@ -1,6 +1,10 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getInfiniteProjects } from "../utils/api";
+import { getInfiniteProjects, updateWatchedOrLikes } from "../utils/api";
 import { RotatingLines } from "react-loader-spinner";
 import Card from "./Card";
 import { ProjectData } from "../types/project";
@@ -10,14 +14,32 @@ function HomeFeed({ vscode }: { vscode: any }) {
   const { ref, inView } = useInView({
     threshold: 1,
   });
-  const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ["items"],
-      queryFn: getInfiniteProjects,
-      initialPageParam: 1,
-      // lastPage contains the response object
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-    });
+  const queryClient = useQueryClient();
+  const {
+    data,
+    status,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["items"],
+    queryFn: getInfiniteProjects,
+    initialPageParam: 1,
+    // lastPage contains the response object
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+  });
+
+  const { mutate } = useMutation({
+    mutationKey: ["projects", "update"],
+    mutationFn: ({ field, id }: { field: string; id: string }) =>
+      updateWatchedOrLikes(field, id),
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  console.log("data", data);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -37,15 +59,13 @@ function HomeFeed({ vscode }: { vscode: any }) {
             ariaLabel="rotating-lines-loading"
           />
         )} */}
-        {data?.pages?.map((page) => {
-          return (
-            <div key={page.currentPage} className="flex flex-col w-full gap-4">
-              {page?.data?.map((el: ProjectData) => {
-                return <Card el={el} vscode={vscode} key={el._id} />;
-              })}
-            </div>
-          );
-        })}
+        {data?.pages?.map((page) => (
+          <div key={page.currentPage} className="flex flex-col w-full gap-4">
+            {page?.data?.map((el: ProjectData) => (
+              <Card el={el} vscode={vscode} key={el.id} homeMutate={mutate} />
+            ))}
+          </div>
+        ))}
         {status === "pending" && (
           <RotatingLines
             visible={true}

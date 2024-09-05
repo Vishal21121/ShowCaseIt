@@ -317,7 +317,7 @@ func (pr *ProjectHandler) IncrementLikesOrViews(c echo.Context) error {
 
 	return c.JSON(200, types.ApiResponse{
 		Data:    nil,
-		Message: fmt.Sprintf("Likes incremented successfully: %d", updatedDocument.Likes),
+		Message: fmt.Sprintf("%s incremented successfully", bodyData.Field),
 		Success: true,
 	})
 

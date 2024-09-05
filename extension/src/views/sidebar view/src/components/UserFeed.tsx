@@ -1,6 +1,6 @@
 import Card from "../components/Card";
 import { useUserContext } from "../context/UserContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserPost } from "../utils/api";
 import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
@@ -9,6 +9,7 @@ import { ProjectData } from "../types/project";
 
 function UserFeed({ vscode }: { vscode: any }) {
   const userContext = useUserContext();
+  const queryClient = useQueryClient();
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey: ["posts"],
@@ -30,6 +31,11 @@ function UserFeed({ vscode }: { vscode: any }) {
     refetch();
   };
 
+  function removePost(id: string) {
+    const filteredData = data?.filter((el: ProjectData) => el._id !== id);
+    queryClient.setQueryData(["posts"], filteredData);
+  }
+
   useEffect(() => {
     userContext?.setRefetchContainer(refetchFunction);
   }, [refetch]);
@@ -48,7 +54,12 @@ function UserFeed({ vscode }: { vscode: any }) {
       {data &&
         data?.map((el: ProjectData) => {
           return (
-            <Card el={el} vscode={vscode} key={el._id} refetch={refetch} />
+            <Card
+              el={el}
+              vscode={vscode}
+              key={el._id}
+              removePost={removePost}
+            />
           );
         })}
     </div>

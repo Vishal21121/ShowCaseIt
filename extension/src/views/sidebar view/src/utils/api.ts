@@ -58,4 +58,27 @@ async function deleteProject(id: string) {
   }
 }
 
-export { getUserPost, getInfiniteProjects, deleteProject };
+async function updateWatchedOrLikes(field: string, id: string) {
+  try {
+    const response = await axios.patch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/project/increment`,
+      {
+        field,
+        id,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data);
+    }
+    return error;
+  }
+}
+
+export {
+  getUserPost,
+  getInfiniteProjects,
+  deleteProject,
+  updateWatchedOrLikes,
+};
