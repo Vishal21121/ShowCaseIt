@@ -25,7 +25,21 @@ function App() {
       switch (message.command) {
         case "projectData":
           if (message.data) {
-            setProjectData(message.data);
+            const parsedDate = new Date(message.data.createdAt);
+            const options: Intl.DateTimeFormatOptions = {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            };
+            const formattedDate = parsedDate.toLocaleDateString(
+              "en-US",
+              options
+            );
+            const formattedData = {
+              ...message.data,
+              createdAt: formattedDate,
+            };
+            setProjectData(formattedData);
           }
       }
     });
@@ -72,7 +86,7 @@ function App() {
           />
           <div className="w-1 h-1 -mt-4 bg-white rounded-full"></div>
           <p className="-mt-4 text-lg font-bold text-neutral-content">
-            Sep 2, 2024
+            {projectData?.createdAt}
           </p>
         </div>
       </div>
