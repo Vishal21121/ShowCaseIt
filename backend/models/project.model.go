@@ -13,6 +13,7 @@ type ProjectInsert struct {
 	Domain      string    `bson:"domain" json:"domain"`
 	UserDetails User      `bson:"userDetails" json:"userDetails"`
 	Likes       int       `bson:"likes" json:"likes"`
+	LikedUsers  []string  `bson:"likedUsers" json:"likedUsers"`
 	Watched     int       `bson:"watched" json:"watched"`
 	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
 	UpdatedAt   time.Time `bson:"updatedAt" json:"updatedAt"`
@@ -28,6 +29,7 @@ type ProjectSend struct {
 	Domain      string    `bson:"domain" json:"domain"`
 	UserDetails User      `bson:"userDetails" json:"userDetails"`
 	Likes       int       `bson:"likes" json:"likes"`
+	LikedUsers  []string  `bson:"likedUsers" json:"likedUsers"`
 	Watched     int       `bson:"watched" json:"watched"`
 	CreatedAt   time.Time `bson:"createdAt" json:"createdAt"`
 	UpdatedAt   time.Time `bson:"updatedAt" json:"updatedAt"`

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -55,6 +56,7 @@ func (pr *ProjectHandler) CreateProject(c echo.Context) error {
 		Domain:      caser.String(bodyData.Domain),
 		UserDetails: bodyData.UserDetails,
 		Likes:       0,
+		LikedUsers:  []string{},
 		Watched:     0,
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
@@ -297,6 +299,10 @@ func (pr *ProjectHandler) IncrementLikesOrViews(c echo.Context) error {
 		return utils.ThrowError(400, "Please provide field or Id", []string{})
 	}
 
+	if bodyData.Field == "likes" && bodyData.UserLiked == "" {
+		return utils.ThrowError(400, "Please provide user liked", []string{})
+	}
+
 	objectIdFromString, _ := primitive.ObjectIDFromHex(bodyData.ID)
 
 	var projectFound models.ProjectSend
@@ -307,13 +313,25 @@ func (pr *ProjectHandler) IncrementLikesOrViews(c echo.Context) error {
 		return utils.ThrowError(404, "Project does not exist", []string{})
 	}
 
+	if bodyData.Field == "likes" && slices.Contains(projectFound.LikedUsers, bodyData.UserLiked) {
+		return utils.ThrowError(400, "Project is already liked by this user", []string{})
+	}
 	var updatedDocument models.ProjectSend
-	pr.ProjectCollection.FindOneAndUpdate(
-		c.Request().Context(),
-		bson.M{"_id": objectIdFromString},
-		bson.M{"$inc": bson.M{bodyData.Field: 1}},
-		options.FindOneAndUpdate().SetReturnDocument(options.After),
-	).Decode(&updatedDocument)
+	if bodyData.Field == "likes" {
+		pr.ProjectCollection.FindOneAndUpdate(
+			c.Request().Context(),
+			bson.M{"_id": objectIdFromString},
+			bson.M{"$inc": bson.M{bodyData.Field: 1}, "$push": bson.M{"likedUsers": bodyData.UserLiked}},
+			options.FindOneAndUpdate().SetReturnDocument(options.After),
+		).Decode(&updatedDocument)
+	} else {
+		pr.ProjectCollection.FindOneAndUpdate(
+			c.Request().Context(),
+			bson.M{"_id": objectIdFromString},
+			bson.M{"$inc": bson.M{bodyData.Field: 1}},
+			options.FindOneAndUpdate().SetReturnDocument(options.After),
+		).Decode(&updatedDocument)
+	}
 
 	return c.JSON(200, types.ApiResponse{
 		Data:    nil,

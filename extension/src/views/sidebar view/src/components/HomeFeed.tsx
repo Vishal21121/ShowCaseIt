@@ -14,7 +14,6 @@ function HomeFeed({ vscode }: { vscode: any }) {
   const { ref, inView } = useInView({
     threshold: 1,
   });
-  const queryClient = useQueryClient();
   const {
     data,
     status,
@@ -32,8 +31,15 @@ function HomeFeed({ vscode }: { vscode: any }) {
 
   const { mutate } = useMutation({
     mutationKey: ["projects", "update"],
-    mutationFn: ({ field, id }: { field: string; id: string }) =>
-      updateWatchedOrLikes(field, id),
+    mutationFn: ({
+      field,
+      id,
+      userLiked,
+    }: {
+      field: string;
+      id: string;
+      userLiked?: string;
+    }) => updateWatchedOrLikes(field, id, userLiked),
     onSuccess: () => {
       refetch();
     },

@@ -5,6 +5,7 @@ import { CardData } from "../types/project";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
+import { BiSolidLike } from "react-icons/bi";
 
 function Card({
   vscode,
@@ -15,7 +16,13 @@ function Card({
   const userContext = useUserContext();
 
   const callLoadCommandWithData = () => {
-    updateMutate && updateMutate({ field: "watched", id: el.id });
+    if (userContext?.projectType === "home") {
+      updateMutate &&
+        updateMutate({
+          field: "watched",
+          id: el.id,
+        });
+    }
     vscode?.current.postMessage({
       command: "loadProjectRender",
       data: el,
@@ -73,13 +80,23 @@ function Card({
                 />
                 <p className="font-bold">{el.userDetails.username}</p>
               </div>
-              <div
-                className="flex gap-2"
-                onClick={() => {
-                  updateMutate && updateMutate({ field: "likes", id: el.id });
-                }}
-              >
-                <IoMdThumbsUp className="text-lg" />
+              <div className="flex gap-2">
+                {el.likedUsers.includes(userContext?.userData?.login!) ? (
+                  <BiSolidLike className="text-lg text-primary" />
+                ) : (
+                  <IoMdThumbsUp
+                    className="text-lg"
+                    onClick={() => {
+                      updateMutate &&
+                        updateMutate({
+                          field: "likes",
+                          id: el.id,
+                          userLiked: userContext?.userData?.login!,
+                        });
+                    }}
+                  />
+                )}
+                {/* <IoMdThumbsUp className="text-lg" /> */}
                 <p className="text-sm truncate">{el.likes}</p>
               </div>
               <div className="flex gap-2">

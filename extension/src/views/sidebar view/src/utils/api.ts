@@ -59,13 +59,18 @@ async function deleteProject(id: string) {
   }
 }
 
-async function updateWatchedOrLikes(field: string, id: string) {
+async function updateWatchedOrLikes(
+  field: string,
+  id: string,
+  userLiked?: string
+) {
   try {
     const response = await axios.patch(
       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/increment`,
       {
         field,
         id,
+        userLiked,
       }
     );
     return response.data;

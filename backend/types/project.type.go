@@ -33,6 +33,7 @@ type FilterProject struct {
 }
 
 type IncrementLikesOrViews struct {
-	ID    string `json:"id"  validate:"required,mongodb"`
-	Field string `json:"field"`
+	ID        string `json:"id"  validate:"required,mongodb"`
+	Field     string `json:"field"`
+	UserLiked string `json:"userLiked"`
 }

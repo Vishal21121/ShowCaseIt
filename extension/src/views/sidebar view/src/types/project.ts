@@ -14,6 +14,7 @@ export type ProjectData = {
   description: string;
   domain: string;
   likes: number;
+  likedUsers: string[];
   liveLink: string;
   repoLink: string;
   techStack: string[];
@@ -33,6 +34,7 @@ export type CardData = {
     {
       field: string;
       id: string;
+      userLiked?: string;
     },
     unknown
   >;
