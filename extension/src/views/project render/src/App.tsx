@@ -95,7 +95,10 @@ function App() {
       <MarkDownContent content={projectData?.description!} />
       {/* Stats */}
       <div className="flex justify-center">
-        <Stats likes={projectData?.likes!} watched={projectData?.watched!} />
+        <Stats
+          likes={projectData?.likes!}
+          watched={projectData?.watched! + 1}
+        />
       </div>
       {/* Tech Stack */}
       <h1 className="text-2xl font-bold text-white">Tech Stack</h1>
