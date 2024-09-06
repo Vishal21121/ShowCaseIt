@@ -7,6 +7,7 @@ import { FormFields, schema } from "./types/project";
 import { useMutation } from "@tanstack/react-query";
 import { createProject } from "./utils/apis";
 import { toast } from "react-hot-toast";
+import { domainNames } from "./utils/domainNames";
 
 declare function acquireVsCodeApi(): any;
 
@@ -170,13 +171,22 @@ function App() {
             <label htmlFor="domain" className="text-lg font-bold">
               Domain
             </label>
-            <input
+            {/* <input
               id="domain"
               type="text"
               placeholder="Enter domain"
               className="w-full input input-bordered input-primary"
+              
+            /> */}
+            <select
+              className="w-full max-w-xs select select-bordered"
+              id="domain"
               {...register("domain")}
-            />
+            >
+              {domainNames.map((domain) => (
+                <option key={domain}>{domain}</option>
+              ))}
+            </select>
             {errors.domain && (
               <div className="mt-1 text-red-500">
                 {String(errors.domain.message)}
