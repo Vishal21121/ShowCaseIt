@@ -1,8 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getInfiniteProjects, updateWatchedOrLikes } from "../utils/api";
 import { RotatingLines } from "react-loader-spinner";
@@ -14,20 +10,14 @@ function HomeFeed({ vscode }: { vscode: any }) {
   const { ref, inView } = useInView({
     threshold: 1,
   });
-  const {
-    data,
-    status,
-    fetchNextPage,
-    isFetchingNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ["items"],
-    queryFn: getInfiniteProjects,
-    initialPageParam: 1,
-    // lastPage contains the response object
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-  });
+  const { data, status, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery({
+      queryKey: ["items"],
+      queryFn: getInfiniteProjects,
+      initialPageParam: 1,
+      // lastPage contains the response object
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    });
 
   const { mutate } = useMutation({
     mutationKey: ["projects", "update"],
@@ -56,15 +46,6 @@ function HomeFeed({ vscode }: { vscode: any }) {
   return (
     <>
       <div className="pb-4 py-1 w-full h-[78vh] flex flex-col items-center gap-4 overflow-auto px-2">
-        {/* {status === "pending" && (
-          <RotatingLines
-            visible={true}
-            width="48"
-            strokeWidth="5"
-            animationDuration="0.75"
-            ariaLabel="rotating-lines-loading"
-          />
-        )} */}
         {data?.pages?.map((page) => (
           <div key={page.currentPage} className="flex flex-col w-full gap-4">
             {page?.data?.map((el: ProjectData) => (

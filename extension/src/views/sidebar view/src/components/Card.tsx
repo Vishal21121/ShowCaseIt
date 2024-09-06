@@ -6,6 +6,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
 import { BiSolidLike } from "react-icons/bi";
+import { useScreenContext } from "../context/ScreenContext";
 
 function Card({
   vscode,
@@ -14,6 +15,7 @@ function Card({
   userDeleteMutate,
 }: CardData): React.JSX.Element {
   const userContext = useUserContext();
+  const screenContext = useScreenContext();
 
   const callLoadCommandWithData = () => {
     if (userContext?.projectType === "home") {
@@ -51,12 +53,14 @@ function Card({
             </div>
           )}
         </div>
-        <p
-          className="text-lg font-bold text-white truncate"
-          onClick={callLoadCommandWithData}
-        >
-          {el.title}
-        </p>
+        <div className="tooltip tooltip-bottom" data-tip="Click to Expand">
+          <p
+            className="text-lg font-bold text-white truncate"
+            onClick={callLoadCommandWithData}
+          >
+            {el.title}
+          </p>
+        </div>
         <div className="flex flex-wrap gap-4">
           <p className="text-lg font-bold text-white">Tech Stack:</p>
           {
@@ -87,12 +91,16 @@ function Card({
                   <IoMdThumbsUp
                     className="text-lg"
                     onClick={() => {
-                      updateMutate &&
-                        updateMutate({
-                          field: "likes",
-                          id: el.id,
-                          userLiked: userContext?.userData?.login!,
-                        });
+                      if (userContext?.userData) {
+                        updateMutate &&
+                          updateMutate({
+                            field: "likes",
+                            id: el.id,
+                            userLiked: userContext?.userData?.login!,
+                          });
+                      } else {
+                        screenContext?.setCurrentScreen("/login");
+                      }
                     }}
                   />
                 )}
