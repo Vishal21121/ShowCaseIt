@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"fmt"
 )
 
 func main() {
@@ -21,13 +22,9 @@ func main() {
 			log.Fatal("Error loading .env file")
 		}
 	}
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("err loading env file")
-	}
 	dbConnectionErr := storage.ConnectToMongo(os.Getenv("MONGO_URI"))
 	if dbConnectionErr != nil {
-		log.Fatal("Err connecting to database: ", err.Error())
+		log.Fatal("Err connecting to database: ", dbConnectionErr.Error())
 	}
 
 	e := echo.New()
