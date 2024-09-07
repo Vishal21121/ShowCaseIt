@@ -95,14 +95,23 @@ function FloatingDock({
   vscode: any;
   refetch: (() => void) | null | undefined;
 }) {
-  const sendLoadWebview = () => {
-    vscode?.current?.postMessage({
-      command: "loadProjectForm",
-    });
-  };
   const userContext = useUserContext();
   const screenContext = useScreenContext();
   console.log("data got", userContext?.userData);
+
+  const sendLoadWebview = () => {
+    vscode?.current?.postMessage({
+      command: "loadProjectForm",
+      data: {
+        projectData: {
+          username: userContext?.userData?.login,
+          avatar: userContext?.userData?.avatar_url,
+          gitHub: userContext?.userData?.html_url,
+        },
+        formType: "createProject",
+      },
+    });
+  };
 
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   const handleRefetchClick = () => {

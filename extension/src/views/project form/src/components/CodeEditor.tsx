@@ -14,6 +14,7 @@ function CodeEditor({
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setValue: UseFormSetValue<FormFields>;
 }) {
+  console.log("codeEditor", code);
   const onChange = useCallback((val: string) => {
     setCode(val);
     setValue("description", val);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CodeEditor from "./CodeEditor";
 import MarkDownRenderer from "./MarkDownRenderer";
 import { UseFormSetValue } from "react-hook-form";
@@ -6,10 +6,16 @@ import { FormFields } from "../types/project";
 
 function ProjectDescription({
   setValue,
+  description,
 }: {
   setValue: UseFormSetValue<FormFields>;
+  description: string;
 }) {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(description);
+  console.log("description", code);
+  useEffect(() => {
+    setCode(description);
+  }, [description]);
   return (
     <div className="w-full">
       <div role="tablist" className="w-full tabs tabs-bordered">

@@ -31,6 +31,18 @@ function Card({
     });
   };
 
+  const updateLoadWebview = () => {
+    vscode?.current?.postMessage({
+      command: "loadProjectForm",
+      data: {
+        projectData: {
+          ...el,
+        },
+        formType: "updateProject",
+      },
+    });
+  };
+
   return (
     <div
       className="flex flex-col w-full gap-4 p-2 border rounded-md shadow-md cursor-pointer shadow-neutral"
@@ -49,7 +61,10 @@ function Card({
                   userDeleteMutate && userDeleteMutate({ id: el.id })
                 }
               />
-              <FaRegEdit className="text-xl text-secondary hover:text-primary" />
+              <FaRegEdit
+                className="text-xl text-secondary hover:text-primary"
+                onClick={updateLoadWebview}
+              />
             </div>
           )}
         </div>

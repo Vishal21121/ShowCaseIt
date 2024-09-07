@@ -10,15 +10,18 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
   public webviewViewContainer: vscode.WebviewView | undefined;
   public vscodeContext: vscode.ExtensionContext;
   public currentProjectData = {};
+  public formType: String;
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
     private readonly _context: vscode.ExtensionContext,
-    private readonly _currentProjectObj: Object
+    private readonly _currentProjectObj: Object,
+    private readonly _formType: String
   ) {
     this._extensionUri = _extensionUri;
     this.vscodeContext = _context;
     this.currentProjectData = _currentProjectObj;
+    this.formType = _formType;
   }
 
   public resolveWebviewView(
@@ -51,6 +54,9 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case "loadProjectForm":
+          console.log("loadPRojectForm", message.data);
+          this.currentProjectData = message.data.projectData;
+          this.formType = message.data.formType;
           vscode.commands.executeCommand("showcaseit.projectForm");
           break;
         case "logoutUser":

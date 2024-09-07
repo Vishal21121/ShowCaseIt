@@ -5,15 +5,25 @@ import { MySidebarViewProvider } from "./components/Sidebar";
 import { Credentials } from "./githubLogin/credentials";
 import { displayProjectForm } from "./components/ProjectForm";
 import { renderProject } from "./components/ProjectRender";
+import {
+  createProjectDataType,
+  updateProjectDataType,
+} from "./types/projectData";
+import { create } from "domain";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-  let currentProjectData = {};
+  let currentProjectData:
+    | updateProjectDataType
+    | createProjectDataType
+    | Object = {};
+  let formType = "";
   const mySidebarProvider = new MySidebarViewProvider(
     context.extensionUri,
     context,
-    currentProjectData
+    currentProjectData,
+    formType
   );
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
@@ -28,9 +38,10 @@ export async function activate(context: vscode.ExtensionContext) {
     panel.webview.onDidReceiveMessage((message) => {
       switch (message.command) {
         case "loaded":
+          console.log("form and projectData", formType, currentProjectData);
           panel.webview.postMessage({
-            command: "userData",
-            data: context.globalState.get("userData"),
+            command: mySidebarProvider.formType,
+            data: mySidebarProvider.currentProjectData,
           });
           break;
         case "projectCreated":
