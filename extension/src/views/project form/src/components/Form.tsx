@@ -6,10 +6,11 @@ import {
   createProjectDataType,
   FormFields,
   schema,
+  updateProjectData,
   updateProjectDataType,
 } from "../types/project";
 import { useMutation } from "@tanstack/react-query";
-import { createProject } from "../utils/apis";
+import { createProject, updateProject } from "../utils/apis";
 import { toast } from "react-hot-toast";
 import { domainNames } from "../utils/domainNames";
 
@@ -60,12 +61,55 @@ function Form({
     },
   });
 
+  const {
+    error: updateError,
+    isPending: isUpdatePending,
+    mutate: updateMutate,
+  } = useMutation({
+    mutationKey: ["project", "update"],
+    mutationFn: (data: updateProjectData) => updateProject(data),
+    onSuccess: () => {
+      toast.success("Project updated successfully", {
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        (vscode?.current as any).postMessage({
+          command: "projectUpdated",
+        });
+      }, 500);
+    },
+  });
+
+  if (updateError) {
+    console.log(updateError);
+    toast.error(updateError.message, {
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+  }
+
   const submitHandler: SubmitHandler<FormFields> = (data) => {
-    mutate(data);
+    if (formType === "updateProject") {
+      updateMutate({
+        title: data.title,
+        description: data.description,
+        liveLink: data.liveLink,
+        techStack: data.techStack.split(","),
+        id: (currentProjectData as updateProjectDataType).id,
+      });
+    } else {
+      mutate(data);
+    }
   };
 
   useEffect(() => {
-    console.log("formType", formType);
     if (formType === "createProject") {
       setValue(
         "username",
@@ -345,7 +389,9 @@ function Form({
                 ? "Creating..."
                 : "Submit"
               : formType === "updateProject"
-              ? "Update"
+              ? isUpdatePending
+                ? "Updating..."
+                : "Update"
               : "Submit"}
           </button>
         </div>

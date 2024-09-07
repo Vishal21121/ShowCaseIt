@@ -44,9 +44,7 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
           break;
         case "sendUserData":
           const userDataFromState = getUserData(this.vscodeContext);
-          console.log(userDataFromState);
           if (userDataFromState) {
-            console.log("sended");
             webviewView.webview.postMessage({
               command: "userData",
               data: userDataFromState,
@@ -54,7 +52,6 @@ export class MySidebarViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case "loadProjectForm":
-          console.log("loadPRojectForm", message.data);
           this.currentProjectData = message.data.projectData;
           this.formType = message.data.formType;
           vscode.commands.executeCommand("showcaseit.projectForm");

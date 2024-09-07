@@ -38,13 +38,14 @@ export async function activate(context: vscode.ExtensionContext) {
     panel.webview.onDidReceiveMessage((message) => {
       switch (message.command) {
         case "loaded":
-          console.log("form and projectData", formType, currentProjectData);
           panel.webview.postMessage({
             command: mySidebarProvider.formType,
             data: mySidebarProvider.currentProjectData,
           });
           break;
         case "projectCreated":
+          panel.dispose();
+        case "projectUpdated":
           panel.dispose();
       }
     });
@@ -88,7 +89,6 @@ export async function activate(context: vscode.ExtensionContext) {
       const octokit = await credentials.getOctokit();
       const userInfo = await octokit.users.getAuthenticated();
       if (userInfo.status === 200) {
-        console.log(userInfo.data);
         mySidebarProvider.webviewViewContainer?.webview.postMessage({
           command: "loginUser",
           data: userInfo.data,

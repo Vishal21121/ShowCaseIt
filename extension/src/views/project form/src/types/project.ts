@@ -75,3 +75,11 @@ export type createProjectDataType = {
 };
 
 export type FormFields = z.infer<typeof schema>;
+
+export type updateProjectData = {
+  id: string;
+  title: string;
+  description: string;
+  liveLink: string;
+  techStack: string[];
+};

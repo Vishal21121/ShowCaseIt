@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { FormFields } from "../types/project";
+import { FormFields, updateProjectData } from "../types/project";
 
 async function createProject(data: FormFields) {
   const techStack = data.techStack.split(",");
@@ -47,41 +47,24 @@ async function createProject(data: FormFields) {
   }
 }
 
-// async function createProject(data: FormFields) {
-//   const techStack = data.techStack.split(",");
-//   const body = {
-//     title: data.title,
-//     description: data.description,
-//     repoLink: data.repoLink,
-//     liveLink: data.liveLink,
-//     techStack,
-//     domain: data.domain,
-//     demoLink: data.demoLink,
-//     userDetails: {
-//       username: data.username,
-//       avatar: data.avatar,
-//       github: data.githubLink,
-//       twitter: data.twitterLink,
-//       linkedIn: data.linkedInLink,
-//     },
-//   };
-//   try {
-//     const response = await fetch(
-//       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/create`,
-//       {
-//         method: "POST",
-//         mode: "cors",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(body),
-//       }
-//     );
-//     const jsonData = await response.json();
-//     return jsonData;
-//   } catch (error) {
-//     console.log("got error", error);
-//   }
-// }
+async function updateProject(updateData: updateProjectData) {
+  try {
+    const response = await axios.patch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/project/update`,
+      {
+        ...updateData,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 422) {
+        throw new Error(error.response.data.data.errors[0]);
+      } else if (error.response.status === 500) {
+        throw new Error("Internal server error");
+      }
+    }
+  }
+}
 
-export { createProject };
+export { createProject, updateProject };

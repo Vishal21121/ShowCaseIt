@@ -12,7 +12,6 @@ function ProjectDescription({
   description: string;
 }) {
   const [code, setCode] = useState(description);
-  console.log("description", code);
   useEffect(() => {
     setCode(description);
   }, [description]);
