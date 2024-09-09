@@ -210,11 +210,21 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 		filterKey = "userDetails.username"
 	}
 
+	// If no filters are provided, fetch all documents
+	var filter bson.M
+	if unknownKey == "" {
+		filter = bson.M{}
+	} else {
+		fmt.Println("Filter Key:", unknownKey, "Filter Value:", unknownValue)
+		filter = bson.M{
+			filterKey: bson.M{
+				"$eq": unknownValue,
+			},
+		}
+	}
+
 	// finding the count of documents and setting the currentPage and nextPage property
-	projectCount, countError := pr.ProjectCollection.CountDocuments(c.Request().Context(), bson.M{filterKey: bson.M{
-		"$regex":   unknownValue,
-		"$options": "i",
-	}})
+	projectCount, countError := pr.ProjectCollection.CountDocuments(c.Request().Context(), filter)
 	if countError != nil {
 		return utils.ThrowError(500, countError.Error(), []string{})
 	}
@@ -228,11 +238,7 @@ func (pr *ProjectHandler) GetProjectByFilter(c echo.Context) error {
 
 	// finding all the elements based on the filter and the pagination
 	findOptions := options.Find().SetLimit(int64(limit)).SetSkip(int64(startIndex))
-	curr, findError := pr.ProjectCollection.Find(c.Request().Context(), bson.M{
-		filterKey: bson.M{
-			"$regex":   unknownValue,
-			"$options": "i",
-		}}, findOptions)
+	curr, findError := pr.ProjectCollection.Find(c.Request().Context(), filter, findOptions)
 
 	if findError != nil {
 		return utils.ThrowError(500, findError.Error(), []string{})

@@ -16,10 +16,10 @@ import (
 
 func main() {
 	if os.Getenv("IS_PROD") == "false" {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal("Error loading .env file")
-		}
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	}
 	dbConnectionErr := storage.ConnectToMongo(os.Getenv("MONGO_URI"))
 	if dbConnectionErr != nil {
@@ -31,7 +31,7 @@ func main() {
 	// Middleware
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "time=${time_rfc3339}, method=${method}, uri=${uri}, status=${status}, latency=${latency_human}",
+		Format: "time=${time_rfc3339}, method=${method}, uri=${uri}, status=${status}, latency=${latency_human}\n",
 	}))
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = utils.CustomErrorHandler
