@@ -1,10 +1,10 @@
 import Card from "../components/Card";
 import { useUserContext } from "../context/UserContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteProject, getUserPost, updateWatchedOrLikes } from "../utils/api";
+import { deleteProject, getUserPost } from "../utils/api";
 import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { ProjectData } from "../types/project";
 
 function UserFeed({ vscode }: { vscode: any }) {
@@ -12,13 +12,13 @@ function UserFeed({ vscode }: { vscode: any }) {
   const queryClient = useQueryClient();
 
   // Route to get user posts
-  const { data, error, isLoading, refetch } = useQuery({
+  const { data, error, isLoading, refetch, isError } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getUserPost(String(userContext?.userData?.login)),
     enabled: false,
   });
 
-  if (error) {
+  if (isError) {
     toast.error(error.message, {
       style: {
         borderRadius: "10px",
@@ -29,9 +29,9 @@ function UserFeed({ vscode }: { vscode: any }) {
   }
 
   // refetch function to get the posts manually
-  const refetchFunction = () => {
+  const refetchFunction = useCallback(() => {
     refetch();
-  };
+  }, [refetch]);
 
   // Mutation to delete the post
   const { mutate } = useMutation({
@@ -56,19 +56,10 @@ function UserFeed({ vscode }: { vscode: any }) {
 
   useEffect(() => {
     userContext?.setRefetchContainer(refetchFunction);
-  }, [refetch]);
+  }, [refetch, refetchFunction, userContext]);
 
   return (
     <div className="pb-4 py-1 w-full h-[78vh] flex flex-col items-center gap-4 overflow-auto px-2">
-      {isLoading && (
-        <RotatingLines
-          visible={true}
-          width="24"
-          strokeWidth="5"
-          animationDuration="0.75"
-          ariaLabel="rotating-lines-loading"
-        />
-      )}
       {data &&
         data?.map((el: ProjectData) => {
           return (
@@ -81,6 +72,15 @@ function UserFeed({ vscode }: { vscode: any }) {
             />
           );
         })}
+      {isLoading && (
+        <RotatingLines
+          visible={true}
+          width="24"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+        />
+      )}
     </div>
   );
 }

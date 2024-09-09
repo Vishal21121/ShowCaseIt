@@ -3,17 +3,26 @@ import { FaGithub } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
 import { RotatingLines } from "react-loader-spinner";
 import { useScreenContext } from "../context/ScreenContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Login({ vscode }: { vscode: any }): React.JSX.Element {
   const userContext = useUserContext();
   const screenContext = useScreenContext();
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
+    userContext?.setUserData(null);
+    queryClient.invalidateQueries({
+      queryKey: ["items"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["posts"],
+    });
     if (userContext?.userData) {
       setLoading(false);
     }
-  }, [userContext?.userData]);
+  }, [queryClient, userContext, userContext?.userData]);
 
   return (
     <div className="h-screen overflow-hidden">

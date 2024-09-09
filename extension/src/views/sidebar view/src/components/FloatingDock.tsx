@@ -88,13 +88,7 @@ function UserIcon(props: IconProps) {
   );
 }
 
-function FloatingDock({
-  vscode,
-  refetch,
-}: {
-  vscode: any;
-  refetch: (() => void) | null | undefined;
-}) {
+function FloatingDock({ vscode }: { vscode: any }) {
   const userContext = useUserContext();
   const screenContext = useScreenContext();
   console.log("data got", userContext?.userData);
@@ -116,8 +110,8 @@ function FloatingDock({
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   const handleRefetchClick = () => {
     userContext?.setProjectType("user");
-    if (refetch) {
-      refetch();
+    if (userContext?.refetchContainer) {
+      userContext?.refetchContainer();
     }
     if (drawerCheckboxRef.current) {
       drawerCheckboxRef.current.checked = false;

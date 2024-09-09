@@ -8,7 +8,7 @@ function ProjectsHomePage({ vscode }: { vscode: any }): React.JSX.Element {
 
   return (
     <div className="flex flex-col items-center w-full gap-4 p-2">
-      <FloatingDock vscode={vscode} refetch={userContext?.refetchContainer} />
+      <FloatingDock vscode={vscode} />
       <h1 className="text-lg font-bold">
         {userContext?.projectType === "home"
           ? "Explore Projects"
