@@ -13,6 +13,8 @@ async function getUserPost(username: string) {
       throw new Error("Internal server error");
     } else if (axios.isAxiosError(error) && error.response) {
       throw new Error(error.response.data.data.message);
+    } else if (axios.isAxiosError(error) && error.request) {
+      throw new Error("Network error: No response received");
     }
     return error;
   }
@@ -23,7 +25,7 @@ async function getInfiniteProjects({ pageParam }: { pageParam: number }) {
     const response = await axios.get(
       `${
         import.meta.env.VITE_SERVER_URL
-      }/api/v1/project/filter?domain=Web Development&page=${pageParam}&limit=4`
+      }/api/v1/project/filter?page=${pageParam}&limit=4`
     );
     return response.data.data;
   } catch (error) {
@@ -35,12 +37,13 @@ async function getInfiniteProjects({ pageParam }: { pageParam: number }) {
       throw new Error("Internal server error");
     } else if (axios.isAxiosError(error) && error.response) {
       throw new Error(error.response.data.message);
+    } else if (axios.isAxiosError(error) && error.request) {
+      throw new Error("Network error: No response received");
     }
   }
 }
 
 async function deleteProject(id: string) {
-  console.log("deleteProject", id);
   try {
     const response = await axios.delete(
       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/delete`,
@@ -54,6 +57,8 @@ async function deleteProject(id: string) {
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(error.response.data);
+    } else if (axios.isAxiosError(error) && error.request) {
+      throw new Error("Network error: No response received");
     }
     return error;
   }
@@ -77,6 +82,8 @@ async function updateWatchedOrLikes(
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(error.response.data);
+    } else if (axios.isAxiosError(error) && error.request) {
+      throw new Error("Network error: No response received");
     }
     return error;
   }

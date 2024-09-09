@@ -100,7 +100,11 @@ function Card({
                 <p className="font-bold">{el.userDetails.username}</p>
               </div>
               <div className="flex gap-2">
-                {el.likedUsers.includes(userContext?.userData?.login!) ? (
+                {el.likedUsers.includes(
+                  userContext?.userData?.login
+                    ? userContext?.userData?.login
+                    : ""
+                ) ? (
                   <BiSolidLike className="text-lg text-primary" />
                 ) : (
                   <IoMdThumbsUp
@@ -111,7 +115,9 @@ function Card({
                           updateMutate({
                             field: "likes",
                             id: el.id,
-                            userLiked: userContext?.userData?.login!,
+                            userLiked: userContext?.userData?.login
+                              ? userContext?.userData?.login
+                              : "",
                           });
                       } else {
                         screenContext?.setCurrentScreen("/login");

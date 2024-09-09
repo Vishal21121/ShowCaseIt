@@ -60,18 +60,16 @@ function UserFeed({ vscode }: { vscode: any }) {
 
   return (
     <div className="pb-4 py-1 w-full h-[78vh] flex flex-col items-center gap-4 overflow-auto px-2">
-      {data &&
-        data?.map((el: ProjectData) => {
-          return (
-            <Card
-              el={el}
-              vscode={vscode}
-              key={el.id}
-              removePost={removePost}
-              userDeleteMutate={mutate}
-            />
-          );
-        })}
+      {Array.isArray(data) &&
+        data.map((el: ProjectData) => (
+          <Card
+            el={el}
+            vscode={vscode}
+            key={el.id}
+            removePost={removePost}
+            userDeleteMutate={mutate}
+          />
+        ))}
       {isLoading && (
         <RotatingLines
           visible={true}
