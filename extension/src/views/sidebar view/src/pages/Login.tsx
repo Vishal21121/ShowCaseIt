@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
 import { RotatingLines } from "react-loader-spinner";
-import { useScreenContext } from "../context/ScreenContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 function Login({ vscode }: { vscode: any }): React.JSX.Element {
   const userContext = useUserContext();
-  const screenContext = useScreenContext();
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     userContext?.setUserData(null);
+    userContext?.setProjectType("home");
     queryClient.invalidateQueries({
       queryKey: ["items"],
     });
@@ -26,12 +25,6 @@ function Login({ vscode }: { vscode: any }): React.JSX.Element {
 
   return (
     <div className="h-screen overflow-hidden">
-      <div
-        className="navbar bg-base-300"
-        onClick={() => screenContext?.setCurrentScreen("/")}
-      >
-        <a className="text-xl btn btn-ghost">Home</a>
-      </div>
       <div className="flex flex-col items-center justify-center h-full gap-4 overflow-hidden ">
         <div className="flex flex-col items-center">
           <h1 className="text-2xl font-extrabold text-white">Welcome</h1>

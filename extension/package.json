@@ -1,8 +1,9 @@
 {
-  "name": "showcase-it",
+  "name": "showcaseit",
   "displayName": "ShowCase It",
   "publisher": "VishalSingh",
-  "description": "",
+  "description": "Easily share your projects and explore others' work",
+  "icon": "assets/icon.png",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.91.0"
@@ -10,6 +11,21 @@
   "categories": [
     "Other"
   ],
+  "pricing": "Free",
+  "keywords": [
+    "Showcase It",
+    "share",
+    "projects",
+    "explore",
+    "Share It"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vishal21121/ShowCaseIt"
+  },
+  "bugs": {
+    "url": "https://github.com/Vishal21121/ShowCaseIt/issues"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -17,7 +33,7 @@
       "activitybar": [
         {
           "id": "showcaseit",
-          "icon": "./src/assets/activity.svg",
+          "icon": "./src/assets/share.svg",
           "title": "ShowCase It"
         }
       ]
@@ -27,7 +43,7 @@
         {
           "type": "webview",
           "id": "showcaseit.sidebarView",
-          "name": "Custom Sidebar"
+          "name": "Sidebar"
         }
       ]
     },
