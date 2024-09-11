@@ -5,7 +5,6 @@ import { RotatingLines } from "react-loader-spinner";
 import Card from "./Card";
 import { ProjectData } from "../types/project";
 import { useInView } from "react-intersection-observer";
-import toast from "react-hot-toast";
 
 function HomeFeed({ vscode }: { vscode: any }) {
   const { ref, inView } = useInView({
@@ -27,6 +26,7 @@ function HomeFeed({ vscode }: { vscode: any }) {
     initialPageParam: 1,
     // lastPage contains the response object
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    retry: 0,
   });
 
   const { mutate } = useMutation({
@@ -46,13 +46,7 @@ function HomeFeed({ vscode }: { vscode: any }) {
   });
 
   if (isError) {
-    toast.error(error.message, {
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    console.error("Error in fetching Projects", error.message);
   }
   useEffect(() => {
     if (inView && hasNextPage) {

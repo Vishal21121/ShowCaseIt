@@ -36,7 +36,8 @@ async function getInfiniteProjects({ pageParam }: { pageParam: number }) {
     ) {
       throw new Error("Internal server error");
     } else if (axios.isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.message);
+      console.log("error:", error.response.data);
+      throw new Error(error.response.data.data.message);
     } else if (axios.isAxiosError(error) && error.request) {
       throw new Error("Network error: No response received");
     }

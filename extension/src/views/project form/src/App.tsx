@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Form from "./components/Form";
 import { createProjectDataType, updateProjectDataType } from "./types/project";
+import UpdateForm from "./components/UpdateForm";
 
 declare function acquireVsCodeApi(): any;
 
@@ -35,11 +36,19 @@ function App() {
     });
   }, []);
   return (
-    <Form
-      vscode={vscode}
-      formType={formType}
-      currentProjectData={currentProjectData}
-    />
+    <div>
+      {formType === "createProject" ? (
+        <Form
+          vscode={vscode}
+          currentProjectData={currentProjectData as createProjectDataType}
+        />
+      ) : (
+        <UpdateForm
+          vscode={vscode}
+          currentProjectData={currentProjectData as updateProjectDataType}
+        />
+      )}
+    </div>
   );
 }
 

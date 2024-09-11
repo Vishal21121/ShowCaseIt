@@ -1,21 +1,29 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { useEffect } from "react";
-import ProjectDescription from "./ProjectDescription";
-import { createProjectDataType, FormFields, schema } from "../types/project";
-import { useMutation } from "@tanstack/react-query";
-import { createProject } from "../utils/apis";
+import {
+  FormFields,
+  schema,
+  updateProjectData,
+  updateProjectDataType,
+} from "../types/project";
 import { domainNames } from "../utils/domainNames";
+import { useMutation } from "@tanstack/react-query";
+import { updateProject } from "../utils/apis";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { useEffect } from "react";
+import ProjectDescription from "./ProjectDescription";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-function Form({
+function UpdateForm({
   vscode,
   currentProjectData,
 }: {
   vscode: any;
-  currentProjectData: createProjectDataType | undefined;
+  currentProjectData: updateProjectDataType | undefined;
 }) {
+  const methods = useForm<FormFields>({
+    resolver: zodResolver(schema),
+  });
   const notyf = new Notyf({
     duration: 1000,
     position: {
@@ -23,37 +31,88 @@ function Form({
       y: "top",
     },
   });
-
-  const methods = useForm<FormFields>({
-    resolver: zodResolver(schema),
-  });
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: createProject,
-    onSuccess() {
-      notyf.success("Project created successfully");
+  const {
+    error: updateError,
+    isPending: isUpdatePending,
+    mutate: updateMutate,
+  } = useMutation({
+    mutationKey: ["project", "update"],
+    mutationFn: (data: updateProjectData) => updateProject(data),
+    onSuccess: () => {
+      notyf.success("Project updated successfully");
       setTimeout(() => {
         (vscode?.current as any).postMessage({
-          command: "projectCreated",
+          command: "projectUpdated",
         });
       }, 1000);
     },
-    onError(error) {
-      notyf.error(error.message);
-    },
   });
 
+  if (updateError) {
+    console.log(updateError);
+    notyf.error(updateError.message);
+  }
+
   const submitHandler: SubmitHandler<FormFields> = (data) => {
-    console.log("data from form", data);
-    mutate(data);
+    console.log("updateForm data", data);
+    updateMutate({
+      title: data.title,
+      description: data.description,
+      liveLink: data.liveLink,
+      techStack: data.techStack.split(","),
+      id: (currentProjectData as updateProjectDataType).id,
+    });
   };
 
   useEffect(() => {
-    if (currentProjectData) {
-      methods.setValue("username", currentProjectData?.username);
-      methods.setValue("avatar", currentProjectData?.avatar);
-      methods.setValue("githubLink", currentProjectData?.gitHub);
-    }
+    methods.setValue(
+      "title",
+      (currentProjectData as updateProjectDataType)?.title
+    );
+    methods.setValue(
+      "description",
+      (currentProjectData as updateProjectDataType)?.description
+    );
+    methods.setValue(
+      "repoLink",
+      (currentProjectData as updateProjectDataType)?.repoLink
+    );
+    methods.setValue(
+      "liveLink",
+      (currentProjectData as updateProjectDataType)?.liveLink
+    );
+    methods.setValue(
+      "techStack",
+      (currentProjectData as updateProjectDataType)?.techStack.join(",")
+    );
+    methods.setValue(
+      "domain",
+      (currentProjectData as updateProjectDataType)?.domain
+    );
+    methods.setValue(
+      "username",
+      (currentProjectData as updateProjectDataType)?.userDetails.username
+    );
+    methods.setValue(
+      "avatar",
+      (currentProjectData as updateProjectDataType)?.userDetails.avatar
+    );
+    methods.setValue(
+      "githubLink",
+      (currentProjectData as updateProjectDataType)?.userDetails.gitHub
+    );
+    methods.setValue(
+      "twitterLink",
+      (currentProjectData as updateProjectDataType)?.userDetails.twitter
+    );
+    methods.setValue(
+      "linkedInLink",
+      (currentProjectData as updateProjectDataType)?.userDetails.linkedIn
+    );
+    methods.setValue(
+      "description",
+      (currentProjectData as updateProjectDataType)?.description
+    );
   }, [currentProjectData, methods]);
 
   return (
@@ -79,8 +138,8 @@ function Form({
               {...methods.register("title")}
             />
             {methods.formState.errors.title && (
-              <div className="mt-1 text-red-500 ">
-                {String(methods.formState.errors.title.message)}
+              <div className="mt-1 text-red-500">
+                {String(methods.formState.errors.title?.message)}
               </div>
             )}
           </div>
@@ -102,10 +161,11 @@ function Form({
               </label>
               <input
                 id="repoLink"
-                type="text"
+                type="url"
                 placeholder="Enter GitHub repository link"
                 className="w-full input input-bordered input-primary"
                 {...methods.register("repoLink")}
+                disabled={true}
               />
               {methods.formState.errors.repoLink && (
                 <div className="mt-1 text-red-500">
@@ -119,7 +179,7 @@ function Form({
               </label>
               <input
                 id="liveLink"
-                type="text"
+                type="url"
                 placeholder="Enter live link"
                 className="w-full input input-bordered input-primary"
                 {...methods.register("liveLink")}
@@ -157,6 +217,7 @@ function Form({
               <select
                 className="w-full max-w-xs select select-bordered"
                 id="domain"
+                disabled={true}
                 {...methods.register("domain")}
               >
                 {domainNames.map((domain) => (
@@ -180,6 +241,7 @@ function Form({
               type="text"
               placeholder="Enter GitHub username"
               className="w-full input input-bordered input-primary"
+              disabled={true}
               {...methods.register("username")}
             />
             {methods.formState.errors.username && (
@@ -195,9 +257,10 @@ function Form({
               </label>
               <input
                 id="avatarLink"
-                type="text"
+                type="url"
                 placeholder="Enter link"
                 className="w-full input input-bordered input-primary"
+                disabled={true}
                 {...methods.register("avatar")}
               />
               {methods.formState.errors.avatar && (
@@ -215,6 +278,7 @@ function Form({
                 type="url"
                 placeholder="Enter link"
                 className="w-full input input-bordered input-primary"
+                disabled={true}
                 {...methods.register("githubLink")}
               />
               {methods.formState.errors.githubLink && (
@@ -231,9 +295,10 @@ function Form({
               </label>
               <input
                 id="twitterProfileLink"
-                type="text"
+                type="url"
                 placeholder="Enter link"
                 className="w-full input input-bordered input-primary"
+                disabled={true}
                 {...methods.register("twitterLink")}
               />
               {methods.formState.errors.twitterLink && (
@@ -251,29 +316,23 @@ function Form({
               </label>
               <input
                 id="linkedInProfileLink"
-                type="text"
+                type="url"
                 placeholder="Enter link"
                 className="w-full input input-bordered input-primary"
+                disabled={true}
                 {...methods.register("linkedInLink")}
               />
               {methods.formState.errors.linkedInLink && (
-                <div className="mt-1 text-red-500 ">
+                <div className="mt-1 text-red-500">
                   {String(methods.formState.errors.linkedInLink.message)}
                 </div>
               )}
             </div>
           </div>
           <div className="flex flex-row justify-end">
-            {isPending ? (
-              <button className="btn bg-[#3b82f6] text-white w-fit">
-                <span className="loading loading-spinner"></span>
-                Creating
-              </button>
-            ) : (
-              <button className="btn bg-[#3b82f6] text-white w-fit">
-                Submit
-              </button>
-            )}
+            <button className="btn bg-[#3b82f6] text-white w-fit">
+              {isUpdatePending ? "Updating..." : "Update"}
+            </button>
           </div>
         </form>
       </FormProvider>
@@ -281,4 +340,4 @@ function Form({
   );
 }
 
-export default Form;
+export default UpdateForm;

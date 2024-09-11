@@ -20,9 +20,10 @@ export const schema = z.object({
   repoLink: z
     .string({ required_error: "Repository link is required" })
     .url("Please provide valid url"),
-  liveLink: z
-    .string({ required_error: "Live link is required" })
-    .url("Please provide valid url"),
+  liveLink: z.union([
+    z.string().url({ message: "Please Provide a valid url" }).nullish(),
+    z.literal(""),
+  ]),
   techStack: commaSeparatedString,
   domain: z
     .string({ required_error: "Please provide domain" })
@@ -36,12 +37,14 @@ export const schema = z.object({
   githubLink: z
     .string({ required_error: "GitHub profile link is required" })
     .url("Please provide valid url"),
-  twitterLink: z
-    .string({ required_error: "Twitter profile link is required" })
-    .url("Please provide valid url"),
-  linkedInLink: z
-    .string({ required_error: "LinkedIn profile link is required" })
-    .url("Please provide valid url"),
+  twitterLink: z.union([
+    z.string().url({ message: "Please Provide a valid url" }).nullish(),
+    z.literal(""),
+  ]),
+  linkedInLink: z.union([
+    z.string().url({ message: "Please Provide a valid url" }).nullish(),
+    z.literal(""),
+  ]),
 });
 
 export type UserDetails = {
@@ -80,6 +83,6 @@ export type updateProjectData = {
   id: string;
   title: string;
   description: string;
-  liveLink: string;
+  liveLink: string | null | undefined;
   techStack: string[];
 };

@@ -2,7 +2,6 @@ import Card from "../components/Card";
 import { useUserContext } from "../context/UserContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteProject, getUserPost } from "../utils/api";
-import { toast } from "react-hot-toast";
 import { RotatingLines } from "react-loader-spinner";
 import { useCallback, useEffect } from "react";
 import { ProjectData } from "../types/project";
@@ -16,16 +15,11 @@ function UserFeed({ vscode }: { vscode: any }) {
     queryKey: ["posts"],
     queryFn: () => getUserPost(String(userContext?.userData?.login)),
     enabled: false,
+    retry: 0,
   });
 
   if (isError) {
-    toast.error(error.message, {
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    console.error("Error in fetching Projects", error.message);
   }
 
   // refetch function to get the posts manually
@@ -60,16 +54,17 @@ function UserFeed({ vscode }: { vscode: any }) {
 
   return (
     <div className="pb-4 py-1 w-full h-[78vh] flex flex-col items-center gap-4 overflow-auto px-2">
-      {Array.isArray(data) &&
-        data.map((el: ProjectData) => (
-          <Card
-            el={el}
-            vscode={vscode}
-            key={el.id}
-            removePost={removePost}
-            userDeleteMutate={mutate}
-          />
-        ))}
+      {Array.isArray(data)
+        ? data.map((el: ProjectData) => (
+            <Card
+              el={el}
+              vscode={vscode}
+              key={el.id}
+              removePost={removePost}
+              userDeleteMutate={mutate}
+            />
+          ))
+        : "Nothing to show"}
       {isLoading && (
         <RotatingLines
           visible={true}

@@ -29,6 +29,12 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "authentication": [
+      {
+        "id": "showcaseit",
+        "label": "GitHub"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -47,23 +53,7 @@
         }
       ]
     },
-    "commands": [
-      {
-        "command": "showcaseit.refresh",
-        "title": "Refresh"
-      },
-      {
-        "command": "showcaseit.loginUser",
-        "title": "Login User"
-      }
-    ],
-    "view/title": [
-      {
-        "command": "showcaseit.refresh",
-        "when": "view == showcaseit.sidebarView",
-        "group": "navigation"
-      }
-    ]
+    "commands": []
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -83,8 +73,5 @@
     "@vscode/test-electron": "^2.4.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@octokit/rest": "^21.0.1"
   }
 }

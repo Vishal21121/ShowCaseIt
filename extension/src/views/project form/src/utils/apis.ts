@@ -18,6 +18,15 @@ async function createProject(data: FormFields) {
       linkedIn: data.linkedInLink,
     },
   };
+  if (body.liveLink === "") {
+    body.liveLink = null;
+  }
+  if (body.userDetails.linkedIn === "") {
+    body.userDetails.linkedIn = null;
+  }
+  if (body.userDetails.twitter === "") {
+    body.userDetails.twitter = null;
+  }
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/create`,
@@ -49,6 +58,9 @@ async function createProject(data: FormFields) {
 
 async function updateProject(updateData: updateProjectData) {
   try {
+    if (updateData.liveLink === "") {
+      updateData.liveLink = null;
+    }
     const response = await axios.patch(
       `${import.meta.env.VITE_SERVER_URL}/api/v1/project/update`,
       {

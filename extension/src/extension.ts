@@ -2,14 +2,14 @@
 // Import the module and reference it with the alias vscode in your code below
 import vscode from "vscode";
 import { MySidebarViewProvider } from "./components/Sidebar";
-import { Credentials } from "./githubLogin/credentials";
 import { displayProjectForm } from "./components/ProjectForm";
 import { renderProject } from "./components/ProjectRender";
 import {
   createProjectDataType,
+  githubUserData,
   updateProjectDataType,
 } from "./types/projectData";
-import { create } from "domain";
+import { githubLogin } from "./utils/githubLogin";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -80,25 +80,23 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   // code for logging in the user
-  const credentials = new Credentials();
-  await credentials.initialize(context);
-
   const loginUser = vscode.commands.registerCommand(
     "showcaseit.loginUser",
     async () => {
-      const octokit = await credentials.getOctokit();
-      const userInfo = await octokit.users.getAuthenticated();
-      if (userInfo.status === 200) {
-        mySidebarProvider.webviewViewContainer?.webview.postMessage({
-          command: "loginUser",
-          data: userInfo.data,
-        });
-        context.globalState.update("userData", userInfo.data);
-      }
-
-      vscode.window.showInformationMessage(
-        `Logged into GitHub as ${userInfo.data.login}`
-      );
+      try {
+        const userData = await githubLogin(context);
+        if (userData) {
+          // Display user data
+          vscode.window.showInformationMessage(
+            `Successfully authenticated as ${userData.login}`
+          );
+          context.globalState.update("userData", userData);
+          mySidebarProvider.webviewViewContainer?.webview.postMessage({
+            command: "loginUser",
+            data: userData,
+          });
+        }
+      } catch (error) {}
     }
   );
   context.subscriptions.push(loginUser);

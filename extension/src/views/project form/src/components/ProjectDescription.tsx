@@ -1,20 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import MarkDownRenderer from "./MarkDownRenderer";
-import { UseFormSetValue } from "react-hook-form";
-import { FormFields } from "../types/project";
 
-function ProjectDescription({
-  setValue,
-  description,
-}: {
-  setValue: UseFormSetValue<FormFields>;
-  description: string;
-}) {
-  const [code, setCode] = useState(description);
-  useEffect(() => {
-    setCode(description);
-  }, [description]);
+function ProjectDescription() {
+  const [code, setCode] = useState("");
   return (
     <div className="w-full">
       <div role="tablist" className="w-full tabs tabs-bordered">
@@ -27,7 +16,7 @@ function ProjectDescription({
           defaultChecked
         />
         <div role="tabpanel" className="w-full p-4 tab-content h-[420px]">
-          <CodeEditor code={code} setCode={setCode} setValue={setValue} />
+          <CodeEditor setCode={setCode} />
         </div>
         <input
           type="radio"
