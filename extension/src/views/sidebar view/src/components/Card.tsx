@@ -27,7 +27,10 @@ function Card({
     }
     vscode?.current.postMessage({
       command: "loadProjectRender",
-      data: el,
+      data: {
+        cardData: el,
+        projectType: userContext?.projectType,
+      },
     });
   };
 

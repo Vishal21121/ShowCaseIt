@@ -11,6 +11,7 @@ declare function acquireVsCodeApi(): any;
 
 function App() {
   const [projectData, setProjectData] = useState<ProjectData | null>(null);
+  const [projectType, setProjectType] = useState("");
   const vscode = useRef(null);
 
   useEffect(() => {
@@ -25,7 +26,8 @@ function App() {
       switch (message.command) {
         case "projectData":
           if (message.data) {
-            const parsedDate = new Date(message.data.createdAt);
+            setProjectType(message.data.projectType);
+            const parsedDate = new Date(message.data?.cardData.createdAt);
             const options: Intl.DateTimeFormatOptions = {
               year: "numeric",
               month: "short",
@@ -36,7 +38,7 @@ function App() {
               options
             );
             const formattedData = {
-              ...message.data,
+              ...message.data?.cardData,
               createdAt: formattedDate,
             };
             setProjectData(formattedData);
@@ -78,11 +80,11 @@ function App() {
         {/* User Short info */}
         <div className="flex items-center gap-2">
           <Avatar
-            url={projectData?.userDetails.avatar!}
-            name={projectData?.userDetails.username!}
-            github={projectData?.userDetails.gitHub!}
-            twitter={projectData?.userDetails.twitter!}
-            linkedIn={projectData?.userDetails.linkedIn!}
+            url={projectData?.userDetails.avatar ?? ""}
+            name={projectData?.userDetails.username ?? ""}
+            github={projectData?.userDetails.gitHub ?? ""}
+            twitter={projectData?.userDetails.twitter ?? ""}
+            linkedIn={projectData?.userDetails.linkedIn ?? ""}
           />
           <div className="w-1 h-1 -mt-4 bg-white rounded-full"></div>
           <p className="-mt-4 text-lg font-bold text-neutral-content">
@@ -92,12 +94,16 @@ function App() {
       </div>
 
       {/* Markdown render */}
-      <MarkDownContent content={projectData?.description!} />
+      <MarkDownContent content={projectData?.description ?? ""} />
       {/* Stats */}
       <div className="flex justify-center">
         <Stats
-          likes={projectData?.likes!}
-          watched={projectData?.watched! + 1}
+          likes={projectData?.likes ?? 0}
+          watched={
+            projectType === "home"
+              ? (projectData?.watched ?? 0) + 1
+              : projectData?.watched ?? 0
+          }
         />
       </div>
       {/* Tech Stack */}
@@ -113,11 +119,11 @@ function App() {
       </div>
       <div>
         <Avatar
-          url={projectData?.userDetails.avatar!}
-          name={projectData?.userDetails.username!}
-          github={projectData?.userDetails.gitHub!}
-          twitter={projectData?.userDetails.twitter!}
-          linkedIn={projectData?.userDetails.linkedIn!}
+          url={projectData?.userDetails.avatar ?? ""}
+          name={projectData?.userDetails.username ?? ""}
+          github={projectData?.userDetails.gitHub ?? ""}
+          twitter={projectData?.userDetails.twitter ?? ""}
+          linkedIn={projectData?.userDetails.linkedIn ?? ""}
         />
       </div>
     </div>
