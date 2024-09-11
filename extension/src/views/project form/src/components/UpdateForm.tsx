@@ -117,7 +117,7 @@ function UpdateForm({
 
   return (
     <div className="flex flex-col justify-center w-full max-w-2xl p-6 mx-auto my-6 text-white rounded-lg shadow-lg bg-primary-content">
-      <h1 className="text-2xl font-bold">Project Details</h1>
+      <h1 className="text-2xl font-bold">Update Project Form</h1>
       <p className="text-neutral-content">
         Fill out the form below with your project information.
       </p>
