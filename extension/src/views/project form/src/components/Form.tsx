@@ -114,9 +114,12 @@ function Form({
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="liveLink" className="text-lg font-bold">
-                Live Link
-              </label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="liveLink" className="text-lg font-bold">
+                  Live Link
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="liveLink"
                 type="text"
@@ -226,9 +229,15 @@ function Form({
           </div>
           <div className="flex w-full gap-2">
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="twitterProfileLink" className="text-lg font-bold">
-                Twitter
-              </label>
+              <div className="flex items-center gap-2">
+                <label
+                  htmlFor="twitterProfileLink"
+                  className="text-lg font-bold"
+                >
+                  Twitter
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="twitterProfileLink"
                 type="text"
@@ -243,12 +252,15 @@ function Form({
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
-              <label
-                htmlFor="linkedInProfileLink"
-                className="text-lg font-bold"
-              >
-                LinkedIn
-              </label>
+              <div className="flex items-center gap-2">
+                <label
+                  htmlFor="linkedInProfileLink"
+                  className="text-lg font-bold"
+                >
+                  LinkedIn
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="linkedInProfileLink"
                 type="text"

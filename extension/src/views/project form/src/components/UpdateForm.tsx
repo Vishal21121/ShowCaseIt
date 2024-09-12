@@ -174,9 +174,12 @@ function UpdateForm({
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="liveLink" className="text-lg font-bold">
-                Live Link
-              </label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="liveLink" className="text-lg font-bold">
+                  Live Link
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="liveLink"
                 type="url"
@@ -290,9 +293,15 @@ function UpdateForm({
           </div>
           <div className="flex w-full gap-2">
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="twitterProfileLink" className="text-lg font-bold">
-                Twitter
-              </label>
+              <div className="flex items-center gap-2">
+                <label
+                  htmlFor="twitterProfileLink"
+                  className="text-lg font-bold"
+                >
+                  Twitter
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="twitterProfileLink"
                 type="url"
@@ -308,12 +317,15 @@ function UpdateForm({
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
-              <label
-                htmlFor="linkedInProfileLink"
-                className="text-lg font-bold"
-              >
-                LinkedIn
-              </label>
+              <div className="flex items-center gap-2">
+                <label
+                  htmlFor="linkedInProfileLink"
+                  className="text-lg font-bold"
+                >
+                  LinkedIn
+                </label>
+                <p className="text-neutral-content">(optional)</p>
+              </div>
               <input
                 id="linkedInProfileLink"
                 type="url"
@@ -330,9 +342,16 @@ function UpdateForm({
             </div>
           </div>
           <div className="flex flex-row justify-end">
-            <button className="btn bg-[#3b82f6] text-white w-fit">
-              {isUpdatePending ? "Updating..." : "Update"}
-            </button>
+            {isUpdatePending ? (
+              <button className="btn bg-[#3b82f6] text-white w-fit">
+                <span className="loading loading-spinner"></span>
+                Updating
+              </button>
+            ) : (
+              <button className="btn bg-[#3b82f6] text-white w-fit">
+                Update
+              </button>
+            )}
           </div>
         </form>
       </FormProvider>

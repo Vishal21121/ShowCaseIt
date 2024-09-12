@@ -11,7 +11,7 @@ function UserFeed({ vscode }: { vscode: any }) {
   const queryClient = useQueryClient();
 
   // Route to get user posts
-  const { data, error, isLoading, refetch, isError } = useQuery({
+  const { data, error, isLoading, refetch, isError, isFetching } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getUserPost(String(userContext?.userData?.login)),
     enabled: false,
@@ -64,7 +64,7 @@ function UserFeed({ vscode }: { vscode: any }) {
               userDeleteMutate={mutate}
             />
           ))
-        : "Nothing to show"}
+        : !isFetching && "Nothing to show"}
       {isLoading && (
         <RotatingLines
           visible={true}
