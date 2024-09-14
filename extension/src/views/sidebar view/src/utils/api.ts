@@ -25,7 +25,7 @@ async function getInfiniteProjects({ pageParam }: { pageParam: number }) {
     const response = await axios.get(
       `${
         import.meta.env.VITE_SERVER_URL
-      }/api/v1/project/filter?page=${pageParam}&limit=4`
+      }/api/v1/project/filter?page=${pageParam}&limit=10`
     );
     return response.data.data;
   } catch (error) {

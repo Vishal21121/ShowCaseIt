@@ -197,9 +197,12 @@ function UpdateForm({
 
           <div className="flex w-full gap-2">
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="techStack" className="text-lg font-bold">
-                Tech Stack
-              </label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="techStack" className="text-lg font-bold">
+                  Tech Stack
+                </label>
+                <p className="text-neutral-content">(separate with comma)</p>
+              </div>
               <input
                 id="techStack"
                 type="text"
